@@ -1,0 +1,9 @@
+package vc.dao;
+/**
+ * 实现对于数据库的访问：CRUD.
+ * @author lenovo
+ *
+ */
+public interface IUserDAO {
+
+}

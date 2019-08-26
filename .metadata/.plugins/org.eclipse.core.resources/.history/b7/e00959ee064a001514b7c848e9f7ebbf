@@ -1,0 +1,7 @@
+package vc.srv.impl;
+
+import vc.srv.IClientUserSrv;
+
+public class IClientUserSrvImpl implements IClientUserSrv {
+
+}

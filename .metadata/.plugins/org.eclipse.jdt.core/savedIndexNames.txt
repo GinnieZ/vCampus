@@ -1,0 +1,5 @@
+INDEX VERSION 1.127+F:\教学资料\软件实践I(JAVA)\Codes\vCampus\.metadata\.plugins\org.eclipse.jdt.core
+1858328132.index
+2935710021.index
+2354255169.index
+293258466.index

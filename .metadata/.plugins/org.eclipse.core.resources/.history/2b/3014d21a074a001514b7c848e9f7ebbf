@@ -1,0 +1,14 @@
+package vc.srv.impl;
+
+import vc.srv.IClientUserSrv;
+import vc.srv.User;
+
+public class IClientUserSrvImpl implements IClientUserSrv {
+
+	@Override
+	public User login(String username, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

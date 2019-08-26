@@ -1,0 +1,12 @@
+package vc.test;
+
+import vc.dao.IUserDAO;
+import vc.dao.impl.IUserDAOImpl;
+
+public class TestUserDAO {
+
+	public void testAdd() {
+		IUserDAO iud = new IUserDAOImpl();
+		
+	}
+}

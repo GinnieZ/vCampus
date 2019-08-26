@@ -1,0 +1,9 @@
+package vc.srv;
+/**
+ * 客户端用户服务类。
+ * @author lenovo
+ *
+ */
+public interface IClientUserSrv {
+
+}

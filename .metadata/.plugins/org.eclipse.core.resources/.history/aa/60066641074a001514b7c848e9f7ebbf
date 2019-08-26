@@ -1,0 +1,12 @@
+package vc.vo;
+
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class User implements Serializable {
+
+	private String uid;
+	private String userName;
+	private String password;
+	private String address;
+}
