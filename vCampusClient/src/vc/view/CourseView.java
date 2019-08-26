@@ -231,8 +231,7 @@ public class CourseView extends JFrame {
 					return;
 				}
 				String courseID = (String) courseTbl.getValueAt(currentRow, 0);
-				ISelectCourseImpl newISelectCourseImpl = new ISelectCourseImpl(sockethelper);
-				if (newISelectCourseImpl.selectCourse(courseID, StudentId)) {
+				if (new ISelectCourseImpl(sockethelper).selectCourse(courseID, StudentId)) {
 					JOptionPane.showMessageDialog(null, "已成功选择课程！");
 					courseTbl.setValueAt("已选", currentRow, 6);
 				} else {
