@@ -94,7 +94,27 @@ public class ISelectCourseImpl implements ISelectCourse, MsgType {
 			this.os.flush();
 			try {
 				if (this.is.readInt() == 6051) {
-					return (String[]) this.is.readObject();
+					return (String[]) (this.is.readObject());
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List EnquiryCourseById(String mString) {
+		try {
+			this.os.writeInt(606);
+			this.os.flush();
+			this.os.writeObject(mString);
+			this.os.flush();
+			try {
+				if (this.is.readInt() == 6061) {
+					return Arrays.asList((CourseInfo[]) this.is.readObject());
 				}
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -238,23 +258,6 @@ public class ISelectCourseImpl implements ISelectCourse, MsgType {
 		return null;
 	}
 
-	public List EnquiryCourseById(String mString) {
-		try {
-			this.os.writeInt(602);
-			this.os.flush();
-			this.os.writeObject(mString);
-			this.os.flush();
-			try {
-				return (List) this.is.readObject();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
 
 }

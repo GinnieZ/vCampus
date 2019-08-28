@@ -36,6 +36,12 @@ import vc.common.CourseInfo;
 import vc.helper.SocketHelper;
 import vc.sendImpl.ISelectCourseImpl;
 
+/**
+ * 学生选课界面类。
+ * @author 09017408
+ *
+ */
+
 public class CourseView extends JFrame {
 	public JFrame mainFrame;
 	private JPanel selectCoursePanel = new JPanel();

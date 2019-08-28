@@ -153,7 +153,7 @@ public class ClientThread extends Thread implements MsgType {
 		Course cs = new Course();
 		if (cmd / 10 == 60) {
 			try {
-				if (cmd != 601) {
+				if (cmd != 601 && cmd != 606) {
 					courseInfo = (CourseInfo) this.ois.readObject();
 				}
 			} catch (ClassNotFoundException e1) {
@@ -217,6 +217,21 @@ public class ClientThread extends Thread implements MsgType {
 						this.oos.writeInt(6052);
 					}
 				}catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 606:
+				try {
+					String tempId = (String) this.ois.readObject();
+					CourseInfo[] result = cs.queryCourseById(tempId);
+					if (result != null) {
+						this.oos.writeInt(6061);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(6062);
+					}
+				}catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 				}
 				break;

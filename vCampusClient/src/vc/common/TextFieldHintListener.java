@@ -30,9 +30,4 @@ public class TextFieldHintListener implements FocusListener{
 			textField.setText(hintText);
 		}
 	}
-	
-	public void setHintText(String hintText)
-	{
-		this.hintText = hintText;
-	}
 }

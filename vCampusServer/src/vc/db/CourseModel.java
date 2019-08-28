@@ -87,9 +87,11 @@ public class CourseModel
       this.query = "select * from tbCourse;";
     } else if (!this.info.getId().equals("")) {
       this.query = ("select * from tbCourse where ID='" + this.info.getId() + "';");
+    } else if (!this.info.getName().equals("")) {
+      this.query = ("select * from tbCourse where courseName='" + this.info.getName() + "';");
     } else if (!this.info.getTeacher().equals("")) {
-      this.query = ("select * from tbCourse where teacher='" + this.info.getTeacher() + "';");
-    }
+        this.query = ("select * from tbCourse where teacher='" + this.info.getTeacher() + "';");
+      }
     try
     {
       Statement stmt = this.con.createStatement();
