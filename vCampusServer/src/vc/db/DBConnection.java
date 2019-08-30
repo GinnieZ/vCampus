@@ -10,8 +10,7 @@ import java.sql.SQLException;
 public class DBConnection
 {
   private static Connection con = null;
-  private static String DBurl = "jdbc:Access:///C:\\Users\\15651\\Desktop\\vCampus.mdb";
-  
+  private static String DBurl = "jdbc:Access:///db/vCampus.mdb";
   public static Connection getConnection()
   {
     if (con == null) {
