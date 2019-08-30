@@ -75,6 +75,46 @@ public class Course {
 		}
 		return null;
 	}
+	
+	public CourseInfo[] queryCourseByName(String tempN) {
+		try {
+			CourseInfo searchName = new CourseInfo("", tempN, "", "", "", 0);
+			ResultSet rs = (ResultSet) this.cModel.search(searchName);
+			Vector<CourseInfo> v = new Vector();
+			if (rs != null) {
+				while (rs.next()) {
+					CourseInfo temp = new CourseInfo(rs.getString("ID"), rs.getString("courseName"),
+							rs.getString("teacher"), rs.getString("place"), rs.getString("time"), rs.getDouble("credit"));
+					v.add(temp);
+				}
+				return (CourseInfo[]) v.toArray(new CourseInfo[rs.getRow()]);
+			}
+		} catch (SQLException e) {
+			System.out.println("Database exception");
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public CourseInfo[] queryCourseByTeacher(String tempT) {
+		try {
+			CourseInfo searchTeacher = new CourseInfo("", "", tempT, "", "", 0);
+			ResultSet rs = (ResultSet) this.cModel.search(searchTeacher);
+			Vector<CourseInfo> v = new Vector();
+			if (rs != null) {
+				while (rs.next()) {
+					CourseInfo temp = new CourseInfo(rs.getString("ID"), rs.getString("courseName"),
+							rs.getString("teacher"), rs.getString("place"), rs.getString("time"), rs.getDouble("credit"));
+					v.add(temp);
+				}
+				return (CourseInfo[]) v.toArray(new CourseInfo[rs.getRow()]);
+			}
+		} catch (SQLException e) {
+			System.out.println("Database exception");
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public boolean addCourse(CourseInfo info) {
 		return this.cModel.insert(info);

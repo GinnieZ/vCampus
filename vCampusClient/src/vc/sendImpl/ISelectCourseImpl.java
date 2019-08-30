@@ -125,6 +125,46 @@ public class ISelectCourseImpl implements ISelectCourse, MsgType {
 		}
 		return null;
 	}
+	
+	public List EnquiryCourseByName(String mString) {
+		try {
+			this.os.writeInt(607);
+			this.os.flush();
+			this.os.writeObject(mString);
+			this.os.flush();
+			try {
+				if (this.is.readInt() == 6071) {
+					return Arrays.asList((CourseInfo[]) this.is.readObject());
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List EnquiryCourseByTeacher(String mString) {
+		try {
+			this.os.writeInt(608);
+			this.os.flush();
+			this.os.writeObject(mString);
+			this.os.flush();
+			try {
+				if (this.is.readInt() == 6081) {
+					return Arrays.asList((CourseInfo[]) this.is.readObject());
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public boolean selectCourse(String subNum, String id) {
 		CourseSelectedInfo temp = new CourseSelectedInfo(subNum, id);

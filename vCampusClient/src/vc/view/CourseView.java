@@ -2,6 +2,7 @@ package vc.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -45,6 +46,7 @@ import vc.sendImpl.ISelectCourseImpl;
 public class CourseView extends JFrame {
 	public JFrame mainFrame;
 	private JPanel selectCoursePanel = new JPanel();
+	private JPanel twoButton = new JPanel();
 	private JPanel timetablePanel = new JPanel();
 	private JScrollPane courseScrollPane = new JScrollPane();
 	private JScrollPane timetableScrollPane = new JScrollPane();
@@ -61,7 +63,7 @@ public class CourseView extends JFrame {
 		StudentId = id;
 		sockethelper.getConnection();
 		setMainPanel();
-		this.setVisible(false);
+		this.dispose();
 		action();
 	}
 
@@ -93,7 +95,7 @@ public class CourseView extends JFrame {
 	private void setMainPanel() {
 		mainFrame = new JFrame();
 		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 640, 357);
+		mainFrame.setBounds(10, 20, 750, 800);
 		mainFrame.setTitle("学生选课");
 		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		JTabbedPaneDemo tabbedPaneDemo = new JTabbedPaneDemo();
@@ -103,10 +105,15 @@ public class CourseView extends JFrame {
 	public void setSelectCoursePanel() {
 
 		courseScrollPane.setViewportView(getCourseTable());
+		selectCoursePanel.setLayout(new FlowLayout());
+		courseScrollPane.setBounds(10, 20, 700, 500);
+		
 
-		selectCoursePanel.add(selectButton);
-		selectCoursePanel.add(cancelButton);
 		selectCoursePanel.add(courseScrollPane);
+		twoButton.add(selectButton);
+		twoButton.add(cancelButton);
+		selectCoursePanel.add(twoButton);
+
 	}
 
 	private JTable getCourseTable() {

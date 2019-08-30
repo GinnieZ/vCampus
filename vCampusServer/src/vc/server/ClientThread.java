@@ -153,7 +153,7 @@ public class ClientThread extends Thread implements MsgType {
 		Course cs = new Course();
 		if (cmd / 10 == 60) {
 			try {
-				if (cmd != 601 && cmd != 606) {
+				if (cmd != 601 && cmd != 606 && cmd != 607 && cmd != 608) {
 					courseInfo = (CourseInfo) this.ois.readObject();
 				}
 			} catch (ClassNotFoundException e1) {
@@ -230,6 +230,36 @@ public class ClientThread extends Thread implements MsgType {
 					}
 					else {
 						this.oos.writeInt(6062);
+					}
+				}catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 607:
+				try {
+					String tempName = (String) this.ois.readObject();
+					CourseInfo[] result = cs.queryCourseByName(tempName);
+					if (result != null) {
+						this.oos.writeInt(6071);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(6072);
+					}
+				}catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 608:
+				try {
+					String tempTeacher = (String) this.ois.readObject();
+					CourseInfo[] result = cs.queryCourseByTeacher(tempTeacher);
+					if (result != null) {
+						this.oos.writeInt(6081);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(6082);
 					}
 				}catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();

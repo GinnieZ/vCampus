@@ -208,7 +208,6 @@ public class AdminCourseView extends JFrame  {
 		
 		this.returnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				resetSearchCourseFrame();
 				searchButton.setEnabled(true);
 				returnButton.setEnabled(false);
 				addButton.setEnabled(true);
@@ -263,66 +262,20 @@ public class AdminCourseView extends JFrame  {
 				String courseTime;
 				double courseCredit;
 				
-				// examine whether the textfield is empty
-				if(newID.getText() != "课程代码" && newID.getText().length() != 0)
+				courseID = newID.getText();
+				courseName = newName.getText();
+				courseTeacher = newTeacher.getText();
+				coursePlace = newPlace.getText();
+				courseTime = newTime.getText();
+				courseCredit = Double.parseDouble(newCredit.getText());
+
+				List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseById(courseID);
+				if (!list.isEmpty())
 				{
-					courseID = newID.getText();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "课程代码为空！");
+					JOptionPane.showMessageDialog(null, "输入的课程代码已经存在！");
 					return;
 				}
 				
-				if(newName.getText() != "课程名称")
-				{
-					courseName = newName.getText();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "课程名称为空！");
-					return;
-				}
-				
-				if(newTeacher.getText() != "授课教师")
-				{
-					courseTeacher = newTeacher.getText();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "授课教师为空！");
-					return;
-				}
-				
-				if(newPlace.getText() != "授课地点")
-				{
-					coursePlace = newPlace.getText();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "授课地点为空！");
-					return;
-				}
-				
-				if(newTime.getText() != "授课时间")
-				{
-					courseTime = newTime.getText();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "授课时间为空！");
-					return;
-				}
-				
-				if(newCredit.getText() != "课程学分")
-				{
-					courseCredit = Double.parseDouble(newCredit.getText());
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "课程学分为空！");
-					return;
-				}
 				CourseInfo courseInfo = new CourseInfo(courseID, courseName, 
 						courseTeacher, coursePlace, courseTime, courseCredit);
 				if (new ISelectCourseImpl(sockethelper).addCourse(courseInfo)) {
@@ -433,7 +386,7 @@ public class AdminCourseView extends JFrame  {
 		{
 			List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseById(searchContent);
 			searchCourseFrame.setVisible(false);
-			if (list != null) {
+			if (!list.isEmpty()) {
 				JOptionPane.showMessageDialog(null, "搜索成功！");
 				searchButton.setEnabled(false);
 				returnButton.setEnabled(true);
@@ -456,6 +409,68 @@ public class AdminCourseView extends JFrame  {
 			} else {
 				JOptionPane.showMessageDialog(null, "没有匹配的课程！");
 			}
+			return;
+		}
+
+		if(searchTypes == "课程名称")
+		{
+			List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseByName(searchContent);
+			searchCourseFrame.setVisible(false);
+			if (!list.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "搜索成功！");
+				System.out.println("Show message Dialog.");
+				searchButton.setEnabled(false);
+				returnButton.setEnabled(true);
+				addButton.setEnabled(false);
+				String[] columns = { "代码", "课程名称", "授课教师", "授课地点", "授课时间", "学分", "已选人数" };
+				DefaultTableModel model = new DefaultTableModel(columns, 0);
+				model.setRowCount(0);
+				for (int i = 0; i < list.size(); i++) {
+					CourseInfo courseList = (CourseInfo) list.get(i);
+					String[] studentList = new ISelectCourseImpl(this.sockethelper).EnquiryStudent(courseList);
+					int count = 0; // number of students who select certain course
+					for (int j = 0; j < studentList.length; j++) {
+						count++;
+					}
+					Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+							courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), count };
+					model.addRow(rowData);
+				}
+				courseTbl.setModel(model);
+			} else {
+				JOptionPane.showMessageDialog(null, "没有匹配的课程！");
+			}
+			return;
+		}
+		
+		if(searchTypes == "授课教师")
+		{
+			List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseByTeacher(searchContent);
+			searchCourseFrame.setVisible(false);
+			if (!list.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "搜索成功！");
+				searchButton.setEnabled(false);
+				returnButton.setEnabled(true);
+				addButton.setEnabled(false);
+				String[] columns = { "代码", "课程名称", "授课教师", "授课地点", "授课时间", "学分", "已选人数" };
+				DefaultTableModel model = new DefaultTableModel(columns, 0);
+				model.setRowCount(0);
+				for (int i = 0; i < list.size(); i++) {
+					CourseInfo courseList = (CourseInfo) list.get(i);
+					String[] studentList = new ISelectCourseImpl(this.sockethelper).EnquiryStudent(courseList);
+					int count = 0; // number of students who select certain course
+					for (int j = 0; j < studentList.length; j++) {
+						count++;
+					}
+					Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+							courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), count };
+					model.addRow(rowData);
+				}
+				courseTbl.setModel(model);
+			} else {
+				JOptionPane.showMessageDialog(null, "没有匹配的课程！");
+			}
+			return;
 		}
 	}
 }
