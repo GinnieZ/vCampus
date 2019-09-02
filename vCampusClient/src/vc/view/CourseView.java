@@ -2,6 +2,7 @@ package vc.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -47,7 +48,6 @@ import vc.sendImpl.ISelectCourseImpl;
 public class CourseView extends JFrame {
 	public JFrame mainFrame;
 	private JPanel selectCoursePanel = new JPanel();
-	private JPanel twoButton = new JPanel();
 	private JPanel timetablePanel = new JPanel();
 	private JScrollPane courseScrollPane = new JScrollPane();
 	private JScrollPane timetableScrollPane = new JScrollPane();
@@ -56,6 +56,8 @@ public class CourseView extends JFrame {
 	private String StudentId;
 	private JButton selectButton = new JButton("选择");
 	private JButton cancelButton = new JButton("退选");
+	private JButton searchButton = new JButton("搜索");
+	private JButton returnButton = new JButton("返回");
 	private JTable courseTbl;
 	private JTable timeTbl;
 	private String[][] timeBlock = new String[5][5];
@@ -96,7 +98,7 @@ public class CourseView extends JFrame {
 	private void setMainPanel() {
 		mainFrame = new JFrame();
 		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 750, 800);
+		mainFrame.setBounds(10, 20, 850, 500);
 		mainFrame.setTitle("学生选课");
 		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		JTabbedPaneDemo tabbedPaneDemo = new JTabbedPaneDemo();
@@ -106,19 +108,18 @@ public class CourseView extends JFrame {
 	public void setSelectCoursePanel() {
 
 		courseScrollPane.setViewportView(getCourseTable());
-		selectCoursePanel.setLayout(new FlowLayout());
-		courseScrollPane.setBounds(10, 20, 700, 500);
-		
-
+		courseScrollPane.setBounds(50, 60, 450, 500);
+		selectCoursePanel.add(selectButton);
+		selectCoursePanel.add(cancelButton);
+		selectCoursePanel.add(searchButton);
+		selectCoursePanel.add(returnButton);
 		selectCoursePanel.add(courseScrollPane);
-		twoButton.add(selectButton);
-		twoButton.add(cancelButton);
-		selectCoursePanel.add(twoButton);
 
 	}
 
 	private JTable getCourseTable() {
 		courseTbl = new JTable();
+		courseTbl.setPreferredSize(new Dimension(500, 500));
 		String[] columns = { "代码", "课程名称", "授课教师", "授课地点", "授课时间", "学分", "状态" };
 		DefaultTableModel model = new DefaultTableModel(columns, 0)
 		{
@@ -130,6 +131,7 @@ public class CourseView extends JFrame {
 		courseTbl.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		courseTbl.getTableHeader().setReorderingAllowed(false);
 		courseTbl.setModel(model);
+		courseTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		List<CourseInfo> courselist = new ISelectCourseImpl(this.sockethelper)
 				.EnquirySelectCourse(this.StudentId);
 		List<CourseInfo> list = new ISelectCourseImpl(this.sockethelper).EnquiryAllCourse();
@@ -153,6 +155,14 @@ public class CourseView extends JFrame {
 				model.addRow(rowData);
 			}
 		}
+		
+		courseTbl.getColumnModel().getColumn(0).setPreferredWidth(40);
+		courseTbl.getColumnModel().getColumn(1).setPreferredWidth(100);
+		courseTbl.getColumnModel().getColumn(2).setPreferredWidth(40);
+		courseTbl.getColumnModel().getColumn(3).setPreferredWidth(60);
+		courseTbl.getColumnModel().getColumn(4).setPreferredWidth(80);
+		courseTbl.getColumnModel().getColumn(5).setPreferredWidth(40);
+		courseTbl.getColumnModel().getColumn(6).setPreferredWidth(40);
 		return courseTbl;
 	}
 

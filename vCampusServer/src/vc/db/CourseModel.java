@@ -88,9 +88,9 @@ public class CourseModel
     } else if (!this.info.getId().equals("")) {
       this.query = ("select * from tbCourse where ID='" + this.info.getId() + "';");
     } else if (!this.info.getName().equals("")) {
-      this.query = ("select * from tbCourse where courseName='" + this.info.getName() + "';");
+      this.query = ("select * from tbCourse where courseName like'%" + this.info.getName() + "%';");
     } else if (!this.info.getTeacher().equals("")) {
-        this.query = ("select * from tbCourse where teacher='" + this.info.getTeacher() + "';");
+        this.query = ("select * from tbCourse where teacher like'%" + this.info.getTeacher() + "%';");
       }
     try
     {
