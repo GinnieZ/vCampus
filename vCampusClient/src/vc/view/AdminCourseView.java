@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import vc.common.CourseInfo;
@@ -124,6 +125,8 @@ public class AdminCourseView extends JFrame  {
 				return false;
 			}
 		};
+		courseTbl.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		courseTbl.getTableHeader().setReorderingAllowed(false);
 		courseTbl.setModel(model);
 		List<CourseInfo> list = new ISelectCourseImpl(this.sockethelper).EnquiryAllCourse();
 
@@ -214,6 +217,13 @@ public class AdminCourseView extends JFrame  {
 				courseScrollPane.setViewportView(getCourseTable());
 			}
 		});
+		
+		
+		this.searchConfirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				searchAction();
+			}
+		});
 	}
 	
 	void setAddCourseFrame()
@@ -228,14 +238,13 @@ public class AdminCourseView extends JFrame  {
 	
 	void resetAddCourseFrame()
 	{
-		// when
 		newID.addFocusListener(new TextFieldHintListener(newID, "课程代码"));
 		newName.addFocusListener(new TextFieldHintListener(newName, "课程名称"));
 		newTeacher.addFocusListener(new TextFieldHintListener(newTeacher, "授课教师"));
 		newPlace.addFocusListener(new TextFieldHintListener(newPlace, "授课地点"));
 		newTime.addFocusListener(new TextFieldHintListener(newTime, "授课时间"));
 		newCredit.addFocusListener(new TextFieldHintListener(newCredit, "课程学分"));
-		
+
 		Box box = Box.createVerticalBox();
 		box.add(newID);
 		box.add(newName);
@@ -269,6 +278,8 @@ public class AdminCourseView extends JFrame  {
 				courseTime = newTime.getText();
 				courseCredit = Double.parseDouble(newCredit.getText());
 
+
+				
 				List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseById(courseID);
 				if (!list.isEmpty())
 				{
@@ -370,12 +381,6 @@ public class AdminCourseView extends JFrame  {
 		searchCoursePanel.add(searchField);
 		searchCoursePanel.add(searchConfirmButton);
 		searchCourseFrame.add(searchCoursePanel);
-		
-		this.searchConfirmButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				searchAction();
-			}
-		});
 	}
 	
 	void searchAction()

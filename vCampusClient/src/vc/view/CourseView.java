@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -126,6 +127,8 @@ public class CourseView extends JFrame {
 				return false;
 			}
 		};
+		courseTbl.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		courseTbl.getTableHeader().setReorderingAllowed(false);
 		courseTbl.setModel(model);
 		List<CourseInfo> courselist = new ISelectCourseImpl(this.sockethelper)
 				.EnquirySelectCourse(this.StudentId);

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DBConnection {
 	private static Connection con = null;
@@ -14,16 +15,19 @@ public class DBConnection {
 	public static Connection getConnection() {
 		if (con == null) {
 			try {
-//        Class.forName("com.hxtt.sql.access.AccessDriver");
-//        System.out.println("Driver loaded");
+		        Class.forName("com.hxtt.sql.access.AccessDriver");
+		        System.out.println("Driver loaded");
+		        
+		        con = DriverManager.getConnection(DBurl);
 //        
 //        con = DriverManager.getConnection(DBurl);
 //        System.out.println("Database connected");
-				Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-				String url = "jdbc:ucanaccess://db/vCampus.mdb";
-				con = DriverManager.getConnection(url, "", "");
+//				Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+//				String url = "jdbc:ucanaccess://db/vCampus.mdb";
+//				con = DriverManager.getConnection(url, "", "");
 //        Class.forName("com.hxtt.sql.access.AccessDriver");
 //        con = DriverManager.getConnection(DBurl);
+				
 				System.out.println("Database connected");
 
 			} catch (ClassNotFoundException e) {
