@@ -1,5 +1,6 @@
 package vc.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -7,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -58,9 +60,15 @@ public class CourseView extends JFrame {
 	private JButton cancelButton = new JButton("退选");
 	private JButton searchButton = new JButton("搜索");
 	private JButton returnButton = new JButton("返回");
+	private JPanel buttonCombination = new JPanel();
 	private JTable courseTbl;
 	private JTable timeTbl;
 	private String[][] timeBlock = new String[5][5];
+	private JFrame searchCourseFrame;
+	private JPanel searchCoursePanel;
+	private JButton searchConfirmButton = new JButton("确定搜索");
+	private TextField searchField = new TextField(20);
+	private JComboBox searchType = new JComboBox();
 
 	public CourseView(String id) {
 		StudentId = id;
@@ -100,19 +108,24 @@ public class CourseView extends JFrame {
 		mainFrame.setVisible(true);
 		mainFrame.setBounds(10, 20, 850, 500);
 		mainFrame.setTitle("学生选课");
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JTabbedPaneDemo tabbedPaneDemo = new JTabbedPaneDemo();
 		mainFrame.setContentPane(tabbedPaneDemo);
+		setSearchCourseFrame();
+		searchCourseFrame.setVisible(false);
 	}
 
 	public void setSelectCoursePanel() {
-
+		selectCoursePanel.setLayout(new BorderLayout(10,5));
+		buttonCombination.add(selectButton);
+		buttonCombination.add(cancelButton);
+		buttonCombination.add(searchButton);
+		buttonCombination.add(returnButton);
+		searchButton.setEnabled(true);
+		returnButton.setEnabled(false);
+		selectCoursePanel.add(buttonCombination, BorderLayout.NORTH);
 		courseScrollPane.setViewportView(getCourseTable());
 		courseScrollPane.setBounds(50, 60, 450, 500);
-		selectCoursePanel.add(selectButton);
-		selectCoursePanel.add(cancelButton);
-		selectCoursePanel.add(searchButton);
-		selectCoursePanel.add(returnButton);
 		selectCoursePanel.add(courseScrollPane);
 
 	}
@@ -155,7 +168,6 @@ public class CourseView extends JFrame {
 				model.addRow(rowData);
 			}
 		}
-		
 		courseTbl.getColumnModel().getColumn(0).setPreferredWidth(40);
 		courseTbl.getColumnModel().getColumn(1).setPreferredWidth(100);
 		courseTbl.getColumnModel().getColumn(2).setPreferredWidth(40);
@@ -235,6 +247,11 @@ public class CourseView extends JFrame {
 		
 		timeTbl.setModel(model);
 		timeTbl.setEnabled(false);
+		timeTbl.getColumnModel().getColumn(0).setPreferredWidth(100);
+		timeTbl.getColumnModel().getColumn(1).setPreferredWidth(100);
+		timeTbl.getColumnModel().getColumn(2).setPreferredWidth(100);
+		timeTbl.getColumnModel().getColumn(3).setPreferredWidth(100);
+		timeTbl.getColumnModel().getColumn(4).setPreferredWidth(100);
 		return timeTbl;
 	}
 
@@ -245,6 +262,8 @@ public class CourseView extends JFrame {
 					JOptionPane.showMessageDialog(null, "未选中任何课程！");
 					return;
 				}
+				searchButton.setEnabled(true);
+				returnButton.setEnabled(false);
 				int currentRow = courseTbl.getSelectedRow();
 				String courseState = (String) courseTbl.getValueAt(currentRow, 6);
 				if (courseState == "已选") {
@@ -275,6 +294,8 @@ public class CourseView extends JFrame {
 					JOptionPane.showMessageDialog(null, "未选中任何课程！");
 					return;
 				}
+				searchButton.setEnabled(true);
+				returnButton.setEnabled(false);
 				int currentRow = courseTbl.getSelectedRow();
 				String courseState = (String) courseTbl.getValueAt(currentRow, 6);
 				if (courseState == "未选") {
@@ -293,6 +314,52 @@ public class CourseView extends JFrame {
 				setTimetablePanel();
 			}
 		});
+		
+		this.searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				resetSearchCourseFrame();
+				searchCourseFrame.setVisible(true);
+			}
+		});
+		
+		this.returnButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				searchButton.setEnabled(true);
+				returnButton.setEnabled(false);
+				courseScrollPane.setViewportView(getCourseTable());
+			}
+		});
+		
+		this.searchConfirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				searchAction();
+			}
+		});
+	}
+	
+	void setSearchCourseFrame()
+	{
+		searchCourseFrame = new JFrame();
+		searchCoursePanel = new JPanel();
+		searchCourseFrame.setVisible(true);
+		searchCourseFrame.setBounds(500, 100, 500, 350);
+		searchCourseFrame.setTitle("搜索课程");
+		searchCourseFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		searchType.addItem("课程代码");
+		searchType.addItem("授课教师");
+		searchType.addItem("课程名称");
+		searchType.setBounds(30, 100, 161, 21);
+
+	}
+	
+	void resetSearchCourseFrame()
+	{
+		searchField.setText("");
+		searchCoursePanel.add(searchType);
+		searchCoursePanel.add(searchField);
+		searchCoursePanel.add(searchConfirmButton);
+		searchCourseFrame.add(searchCoursePanel);
 	}
 	
 	boolean checkConflict(Object obj)
@@ -335,5 +402,123 @@ public class CourseView extends JFrame {
 		}
 		return false;
 	}
+	
+	void searchAction()
+	{
+		String searchContent = searchField.getText();
+		String searchTypes = (String) searchType.getSelectedItem();
+		List<CourseInfo> courselist = new ISelectCourseImpl(this.sockethelper)
+				.EnquirySelectCourse(this.StudentId);
+		if(searchTypes == "课程代码")
+		{
+			List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseById(searchContent);
+			searchCourseFrame.setVisible(false);
+			if (!list.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "搜索成功！");
+				searchButton.setEnabled(false);
+				returnButton.setEnabled(true);
+				String[] columns = { "代码", "课程名称", "授课教师", "授课地点", "授课时间", "学分", "状态" };
+				DefaultTableModel model = new DefaultTableModel(columns, 0);
+				model.setRowCount(0);
+				for (int i = 0; i < list.size(); i++) {
+					CourseInfo courseList = (CourseInfo) list.get(i);
+					boolean flag = false;
+					for (int j = 0; j < courselist.size(); j++) {
+						CourseInfo tmpList = (CourseInfo) courselist.get(j);
+						if (tmpList.getId().equals(courseList.getId())) {
+							flag = true;
+						}
+					}
+					if (flag) {
+						Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+								courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), "已选" };
+						model.addRow(rowData);
+					} else {
+						Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+								courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), "未选" };
+						model.addRow(rowData);
+					}
+				}
+				courseTbl.setModel(model);
+			} else {
+				JOptionPane.showMessageDialog(null, "没有匹配的课程！");
+			}
+			return;
+		}
 
+		if(searchTypes == "课程名称")
+		{
+			List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseByName(searchContent);
+			searchCourseFrame.setVisible(false);
+			if (!list.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "搜索成功！");
+				System.out.println("Show message Dialog.");
+				searchButton.setEnabled(false);
+				returnButton.setEnabled(true);
+				String[] columns = { "代码", "课程名称", "授课教师", "授课地点", "授课时间", "学分", "状态" };
+				DefaultTableModel model = new DefaultTableModel(columns, 0);
+				model.setRowCount(0);
+				for (int i = 0; i < list.size(); i++) {
+					CourseInfo courseList = (CourseInfo) list.get(i);
+					boolean flag = false;
+					for (int j = 0; j < courselist.size(); j++) {
+						CourseInfo tmpList = (CourseInfo) courselist.get(j);
+						if (tmpList.getId().equals(courseList.getId())) {
+							flag = true;
+						}
+					}
+					if (flag) {
+						Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+								courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), "已选" };
+						model.addRow(rowData);
+					} else {
+						Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+								courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), "未选" };
+						model.addRow(rowData);
+					}
+				}
+				courseTbl.setModel(model);
+			} else {
+				JOptionPane.showMessageDialog(null, "没有匹配的课程！");
+			}
+			return;
+		}
+		
+		if(searchTypes == "授课教师")
+		{
+			List<CourseInfo> list = new ISelectCourseImpl(sockethelper).EnquiryCourseByTeacher(searchContent);
+			searchCourseFrame.setVisible(false);
+			if (!list.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "搜索成功！");
+				searchButton.setEnabled(false);
+				returnButton.setEnabled(true);
+				String[] columns = { "代码", "课程名称", "授课教师", "授课地点", "授课时间", "学分", "状态" };
+				DefaultTableModel model = new DefaultTableModel(columns, 0);
+				model.setRowCount(0);
+				for (int i = 0; i < list.size(); i++) {
+					CourseInfo courseList = (CourseInfo) list.get(i);
+					boolean flag = false;
+					for (int j = 0; j < courselist.size(); j++) {
+						CourseInfo tmpList = (CourseInfo) courselist.get(j);
+						if (tmpList.getId().equals(courseList.getId())) {
+							flag = true;
+						}
+					}
+					if (flag) {
+						Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+								courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), "已选" };
+						model.addRow(rowData);
+					} else {
+						Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getTeacher(),
+								courseList.getPlace(), courseList.getTime(), Double.valueOf(courseList.getCredit()), "未选" };
+						model.addRow(rowData);
+					}
+				}
+				courseTbl.setModel(model);
+			} else {
+				JOptionPane.showMessageDialog(null, "没有匹配的课程！");
+			}
+			return;
+		}
+	}
 }

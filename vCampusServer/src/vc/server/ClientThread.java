@@ -3,23 +3,34 @@ package vc.server;
 import vc.common.CourseInfo;
 import vc.common.CourseSelectedInfo;
 import vc.common.MsgType;
+import vc.common.OnlineClassInfo;
+import vc.common.OnlineClassSelectedInfo;
 import vc.common.UserInfo;
 import vc.helper.Login;
 import vc.helper.Course;
+import vc.helper.OnlineClass;
 import vc.view.ServerView;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ClientThread extends Thread implements MsgType {
 	private ServerThread currentServer;
 	private Socket client;
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
+	private DataOutputStream dos;
+	private DataInputStream dis;
 	public String curUser;
 
 	public ClientThread(Socket s, ServerThread st) {
@@ -29,7 +40,8 @@ public class ClientThread extends Thread implements MsgType {
 		try {
 			this.ois = new ObjectInputStream(this.client.getInputStream());
 			this.oos = new ObjectOutputStream(this.client.getOutputStream());
-
+			this.dis = new DataInputStream(this.client.getInputStream());
+			this.dos = new DataOutputStream(this.client.getOutputStream());
 			ServerView.setTextArea("客户端已连接\n客户端IP：" + this.client.getInetAddress().getHostAddress() + "\n");
 			System.out.println("Client connected");
 			ServerView.count++;
@@ -58,6 +70,9 @@ public class ClientThread extends Thread implements MsgType {
 			case 6:
 				Course(cmd);
 				break;
+			case 9:
+				OnlineClass(cmd);
+				break;
 			}
 		}
 	}
@@ -67,6 +82,8 @@ public class ClientThread extends Thread implements MsgType {
 			try {
 				this.oos.close();
 				this.ois.close();
+				this.dos.close();
+				this.dis.close();
 				ServerView.setTextArea("客户端已断开连接\n客户端IP：" + this.client.getInetAddress().getHostAddress() + "\n");
 
 				this.client.close();
@@ -328,6 +345,246 @@ public class ClientThread extends Thread implements MsgType {
 				} catch (IOException | ClassNotFoundException e) {
 					e.printStackTrace();
 				}
+				break;
+			}
+		}
+	}
+	
+	private void OnlineClass(int cmd) {
+		OnlineClassInfo courseInfo = null;
+		OnlineClassSelectedInfo csInfo = null;
+		String path = null;
+		OnlineClass cs = new OnlineClass();
+		if (cmd / 10 == 90) {
+			try {
+				if (cmd != 901 && cmd != 906 && cmd != 907 && cmd != 908) {
+					courseInfo = (OnlineClassInfo) this.ois.readObject();
+				}
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			switch (cmd) {
+			case 901:
+				try {
+					OnlineClassInfo[] result = cs.queryClass();
+					if (result != null) {
+						this.oos.writeInt(9011);
+						this.oos.writeObject(result);
+					} else {
+						this.oos.writeInt(9012);
+					}
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 902:
+				try {
+					int wb = cs.addClass(courseInfo) ? 9021 : 9022;
+					this.oos.writeInt(wb);
+
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 903:
+				try {
+					int wb = cs.deleteClass(courseInfo) ? 9031 : 9032;
+					this.oos.writeInt(wb);
+
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 904:
+				try {
+					int wb = cs.modifyClass(courseInfo) ? 9041 : 9042;
+					this.oos.writeInt(wb);
+
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 905:
+				try {
+					String[] result = cs.queryStudent(courseInfo);
+					if (result != null) {
+						this.oos.writeInt(9051);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(9052);
+					}
+				}catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 906:
+				try {
+					String tempId = (String) this.ois.readObject();
+					OnlineClassInfo[] result = cs.queryClassById(tempId);
+					if (result != null) {
+						this.oos.writeInt(9061);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(9062);
+					}
+				}catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 907:
+				try {
+					String tempName = (String) this.ois.readObject();
+					OnlineClassInfo[] result = cs.queryClassByName(tempName);
+					if (result != null) {
+						this.oos.writeInt(9071);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(9072);
+					}
+				}catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 908:
+				try {
+					String tempTeacher = (String) this.ois.readObject();
+					OnlineClassInfo[] result = cs.queryClassByTeacher(tempTeacher);
+					if (result != null) {
+						this.oos.writeInt(9081);
+						this.oos.writeObject(result);
+					}
+					else {
+						this.oos.writeInt(9082);
+					}
+				}catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+			
+		} else if (cmd / 10 == 91){
+			try {
+				if (cmd != 914) {
+					csInfo = (OnlineClassSelectedInfo) this.ois.readObject();
+					System.out.println("read: " + csInfo.getId() + " " + csInfo.getSelector());
+				}
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			switch (cmd) {
+			case 911:
+				try {
+					int wb = cs.selectClass(csInfo) ? 9111 : 9112;
+					this.oos.writeInt(wb);
+
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 912:
+				try {
+					int wb = cs.deselectClass(csInfo) ? 9121 : 9122;
+					this.oos.writeInt(wb);
+
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 913:
+				try {
+					OnlineClassInfo[] result = cs.queryCurriculum(csInfo);
+					if (result != null) {
+						this.oos.writeInt(9131);
+						this.oos.writeObject(result);
+					} else {
+						this.oos.writeInt(9132);
+					}
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;	
+			case 914:
+				try {
+					OnlineClassInfo cInfo = (OnlineClassInfo) this.ois.readObject();
+
+					OnlineClassSelectedInfo[] result = cs.queryStatus(cInfo);
+					if (result != null) {
+						this.oos.writeInt(9141);
+						this.oos.writeObject(result);
+					} else {
+						this.oos.writeInt(9142);
+					}
+					this.oos.flush();
+				} catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 915:
+				try {
+					int wb = cs.forwardClass(csInfo) ? 9151 : 9152;
+					this.oos.writeInt(wb);
+
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			}
+		}else {
+			try {
+				if (true) {
+					path = (String) this.ois.readObject();
+					System.out.println("read: " + path);
+				}
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			switch (cmd) {
+			case 921:
+				FileInputStream fis = null;
+				byte[] sendByte = new byte[1024]; 
+				try {
+					
+					File file = new File(path);
+					fis = new FileInputStream(file);
+					int length =0;
+					System.out.println("准备发送文件");
+					while((length=fis.read(sendByte)) != -1){
+						this.dos.write(sendByte, 0 , length);
+						this.dos.flush();
+					}
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FileNotFoundException e)
+		        {
+					System.out.println("找不到文件");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				finally {
+					if(fis != null){
+			    			System.out.println("文件发送完毕");
+//			    			fis.close();          
+			            }
+				}
+
 				break;
 			}
 		}

@@ -112,6 +112,28 @@ public class Function extends JFrame {
 		});
 		btnStore.setBounds(180, 80, 93, 23);
 		contentPane.add(btnStore);
+		
+		JButton btnOnlineClass = new JButton("ÔÚÏß¿ÎÌÃ");
+		btnOnlineClass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(type == "student")
+				{
+					OnlineClassView myOCView = new OnlineClassView(id);
+					myOCView.setVisible(true);
+					dispose();
+				}
+				else
+				{
+					if (type == "admin") {
+//						AdminCourseView AdminCourseView = new AdminCourseView(id);
+//						AdminCourseView.setVisible(true);
+//						dispose();
+					}
+				}
+			}
+		});
+		btnOnlineClass.setBounds(20, 110, 93, 23);
+		contentPane.add(btnOnlineClass);
 	}
 
 }
