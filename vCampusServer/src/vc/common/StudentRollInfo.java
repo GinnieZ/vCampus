@@ -19,7 +19,7 @@ public class StudentRollInfo
   private String major;
   private String dormitory;
   
-  public StudentRollInfo(String id, String name, String age, String gender, String birthday, String birthPlace, String entranceTime, String photo, String nation, String department, String major, String dormitory)
+  public StudentRollInfo(String id, String name, String age, String gender, String birthday, String birthPlace,/* String entranceTime, String photo, String nation,*/ String department, /*String major, */String dormitory)
   {
     this.id = id;
     this.name = name;
@@ -27,11 +27,11 @@ public class StudentRollInfo
     this.gender = gender;
     this.birthday = birthday;
     this.birthPlace = birthPlace;
-    this.entranceTime = entranceTime;
-    this.photo = photo;
-    this.nation = nation;
+    //this.entranceTime = entranceTime;
+   // this.photo = photo;
+    //this.nation = nation;
     this.department = department;
-    this.major = major;
+    //this.major = major;
     this.dormitory = dormitory;
   }
   

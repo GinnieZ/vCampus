@@ -9,22 +9,22 @@ import vc.db.StudentRollModel;
 
 public class Student {
 
-	private StudentRollModel model;
+	private StudentRollModel smodel;
 	  
 	  public Student()
 	  {
-	    this.model = new StudentRollModel();
+	    this.smodel = new StudentRollModel();
 	  }
 	  
 	  public StudentRollInfo query(StudentRollInfo info)
 	  {
 	    try
 	    {
-	      ResultSet rs = (ResultSet)this.model.search(info);
+	      ResultSet rs = (ResultSet)this.smodel.search(info);
 	      if (rs.next()) {
 	        return new StudentRollInfo(rs.getString("ID"), rs.getString("stuName"), rs.getString("age"), rs.getString("gender"), 
-	          rs.getString("birthday"), rs.getString("birthPlace"), rs.getString("entranceTime"), rs.getString("photo"), rs.getString("nation"), 
-	          rs.getString("department"), rs.getString("major"), rs.getString("dormitory"));
+	          rs.getString("birthday"), rs.getString("birthPlace"), 
+	          rs.getString("department"), rs.getString("dormitory"));
 	      }
 	      return null;
 	    }
@@ -40,13 +40,13 @@ public class Student {
 	  {
 	    try
 	    {
-	      ResultSet rs = (ResultSet)this.model.search(null);
+	      ResultSet rs = (ResultSet)this.smodel.search(null);
 	      Vector<StudentRollInfo> v = new Vector();
 	      while (rs.next())
 	      {
 	        StudentRollInfo temp = new StudentRollInfo(rs.getString("ID"), rs.getString("stuName"), rs.getString("age"), rs.getString("gender"), 
-	          rs.getString("birthday"), rs.getString("birthPlace"), rs.getString("entranceTime"), rs.getString("photo"), rs.getString("nation"), 
-	          rs.getString("department"), rs.getString("major"), rs.getString("dormitory"));
+	          rs.getString("birthday"), rs.getString("birthPlace"), 
+	          rs.getString("department"), rs.getString("dormitory"));
 	        v.add(temp);
 	      }
 	      return (StudentRollInfo[])v.toArray(new StudentRollInfo[rs.getRow()]);
@@ -59,18 +59,18 @@ public class Student {
 	    return null;
 	  }
 	  
-	  public boolean addInfo(StudentRollInfo info)
+	  public boolean AddStudentView(StudentRollInfo info)
 	  {
-	    return this.model.insert(info);
+	    return this.smodel.insert(info);
 	  }
 	  
-	  public boolean modifyInfo(StudentRollInfo info)
+	  public boolean ModifyStudentView(StudentRollInfo info)
 	  {
-	    return this.model.modify(info);
+	    return this.smodel.modify(info);
 	  }
 	  
-	  public boolean deleteInfo(StudentRollInfo info)
+	  public boolean DeleteStudentView(StudentRollInfo info)
 	  {
-	    return this.model.delete(info);
+	    return this.smodel.delete(info);
 	  }
 }

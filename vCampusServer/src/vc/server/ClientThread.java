@@ -5,10 +5,12 @@ import vc.common.CourseSelectedInfo;
 import vc.common.MsgType;
 import vc.common.OnlineClassInfo;
 import vc.common.OnlineClassSelectedInfo;
+import vc.common.StudentRollInfo;
 import vc.common.UserInfo;
 import vc.helper.Login;
 import vc.helper.Course;
 import vc.helper.OnlineClass;
+import vc.helper.Student;
 import vc.view.ServerView;
 
 import java.io.DataInputStream;
@@ -67,6 +69,9 @@ public class ClientThread extends Thread implements MsgType {
 			case 1:
 				Login(cmd);
 				break;
+			case 3: 
+		        StudentRoll(cmd);
+		        break;
 			case 6:
 				Course(cmd);
 				break;
@@ -164,6 +169,108 @@ public class ClientThread extends Thread implements MsgType {
 		}
 	}
 
+	private void StudentRoll(int cmd)
+	  {
+	    StudentRollInfo stuInfo = null;
+	    Student sr = new Student();
+	    try
+	    {
+	      if (cmd != 305) {
+	        stuInfo = (StudentRollInfo)this.ois.readObject();
+	      }
+	    }
+	    catch (IOException e)
+	    {
+	      e.printStackTrace();
+	    }
+	    catch (ClassNotFoundException e)
+	    {
+	      e.printStackTrace();
+	    }
+	    switch (cmd)
+	    {
+	    case 301: 
+	      try
+	      {
+	        StudentRollInfo result = sr.query(stuInfo);
+	        if (result != null)
+	        {
+	          this.oos.writeInt(3011);
+	          this.oos.writeObject(result);
+	        }
+	        else
+	        {
+	          this.oos.writeInt(3012);
+	        }
+	        this.oos.flush();
+	      }
+	      catch (IOException e)
+	      {
+	        e.printStackTrace();
+	      }
+	      break;
+	    case 302: 
+	      try
+	      {
+	        int wb = sr.AddStudentView(stuInfo) ? 3021 : 3022;
+	        this.oos.writeInt(wb);
+	        
+	        this.oos.flush();
+	      }
+	      catch (IOException e)
+	      {
+	        e.printStackTrace();
+	      }
+	      break;
+	    case 303: 
+	      try
+	      {
+	        int wb = sr.DeleteStudentView(stuInfo) ? 3031 : 3032;
+	        this.oos.writeInt(wb);
+	        
+	        this.oos.flush();
+	      }
+	      catch (IOException e)
+	      {
+	        e.printStackTrace();
+	      }
+	      break;
+	    case 304: 
+	      try
+	      {
+	        int wb = sr.ModifyStudentView(stuInfo) ? 3041 : 3042;
+	        this.oos.writeInt(wb);
+	        
+	        this.oos.flush();
+	      }
+	      catch (IOException e)
+	      {
+	        e.printStackTrace();
+	      }
+	      break;
+	    case 305: 
+	      try
+	      {
+	        StudentRollInfo[] result = sr.queryAll();
+	        if (result != null)
+	        {
+	          this.oos.writeInt(3051);
+	          this.oos.writeObject(result);
+	        }
+	        else
+	        {
+	          this.oos.writeInt(3052);
+	        }
+	        this.oos.flush();
+	      }
+	      catch (IOException e)
+	      {
+	        e.printStackTrace();
+	      }
+	      break;
+	    }
+	  }
+	
 	private void Course(int cmd) {
 		CourseInfo courseInfo = null;
 		CourseSelectedInfo csInfo = null;

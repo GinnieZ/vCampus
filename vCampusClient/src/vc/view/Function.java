@@ -48,7 +48,14 @@ public class Function extends JFrame {
 				{
 					StudentView myStudentView = new StudentView(id);
 					myStudentView.setVisible(true);
-					dispose();
+				}
+				else
+				{
+					if (type == "admin")
+					{	
+					  AdminFunctionView myAdminFunctionView = new AdminFunctionView(id);
+					  myAdminFunctionView.setVisible(true);
+					}	
 				}
 			}
 		});
@@ -62,14 +69,12 @@ public class Function extends JFrame {
 				{
 					CourseView myCourseView = new CourseView(id);
 					myCourseView.setVisible(true);
-					dispose();
 				}
 				else
 				{
 					if (type == "admin") {
 						AdminCourseView AdminCourseView = new AdminCourseView(id);
 						AdminCourseView.setVisible(true);
-						dispose();
 					}
 				}
 			}
