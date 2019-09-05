@@ -1,5 +1,7 @@
 package vc.server;
 
+import vc.common.BankInfo;
+import vc.helper.Bank;
 import vc.common.CourseInfo;
 import vc.common.CourseSelectedInfo;
 import vc.common.MsgType;
@@ -695,5 +697,57 @@ public class ClientThread extends Thread implements MsgType {
 				break;
 			}
 		}
+	}
+	
+	private void Bank(int cmd)
+	{
+	  BankInfo bankInfo = null;
+	  Bank bk = new Bank();
+	  try
+	  {
+	    bankInfo = (BankInfo)this.ois.readObject();
+	  }
+	  catch (IOException e)
+	  {
+	    e.printStackTrace();
+	  }
+	  catch (ClassNotFoundException e)
+	  {
+	    e.printStackTrace();
+	  }
+	  switch (cmd)
+	  {
+	  case 201: 
+	    try
+	    {
+	      double result = bk.queryBalance(bankInfo);
+	      if (result != 0.0D)
+	      {
+	        this.oos.writeInt(2011);
+	        this.oos.writeDouble(result);
+	      }
+	      else
+	      {
+	        this.oos.writeInt(2012);
+	      }
+	      this.oos.flush();
+	    }
+	    catch (IOException e)
+	    {
+	      e.printStackTrace();
+	    }
+	  case 202: 
+	    try
+	    {
+	      int wb = bk.transfer(bankInfo) ? 2021 : 2022;
+	      this.oos.writeInt(wb);
+	      
+	      this.oos.flush();
+	    }
+	    catch (IOException e)
+	    {
+	      e.printStackTrace();
+	    }
+	  }
 	}
 }

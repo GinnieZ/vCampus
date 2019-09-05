@@ -39,4 +39,26 @@ public class ILoginImpl
     }
     return false;
   }
+  
+  public boolean register(UserInfo info)
+  {
+	 
+    try
+    {
+    	this.os.writeInt(102);
+        this.os.flush();
+        this.os.writeObject(info);
+        this.os.flush();
+        if (this.is.readInt() == 1021) {
+          return true;
+        }
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    
+    return false;
+	  
+  }
 }

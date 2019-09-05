@@ -139,6 +139,20 @@ public class Function extends JFrame {
 		});
 		btnOnlineClass.setBounds(20, 110, 93, 23);
 		contentPane.add(btnOnlineClass);
+		
+		JButton btnModify = new JButton("银行管理");
+		btnModify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				SocketHelper sockethelper2 = new SocketHelper();
+				sockethelper2.getConnection();
+				BankView bankView=new BankView(sockethelper2, id);
+				bankView.setVisible(true);
+				dispose();
+				//
+			}
+		});
+		btnModify.setBounds(180, 110, 93, 23);
+		contentPane.add(btnModify);
 	}
 
 }

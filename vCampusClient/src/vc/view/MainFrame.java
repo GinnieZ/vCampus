@@ -93,6 +93,20 @@ public class MainFrame extends JFrame {
 		});
 		btnNewButton.setBounds(108, 159, 93, 23);
 		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton2 = new JButton("注册");
+		btnNewButton2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		          SocketHelper sockethelper2 = new SocketHelper();
+		          sockethelper2.getConnection();
+		          //
+		          RegisterFrame register = new RegisterFrame();
+			        register.setVisible(true);
+			        dispose();
+			}
+		});
+		btnNewButton2.setBounds(180, 159, 93, 23);
+		contentPane.add(btnNewButton2);
 	}
 	
 	protected  void doLogin(SocketHelper sockethelper) {
