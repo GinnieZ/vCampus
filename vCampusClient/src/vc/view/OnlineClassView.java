@@ -45,6 +45,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.main.PlayerMain;
 
+import vc.common.CourseInfo;
 import vc.common.OnlineClassInfo;
 import vc.common.OnlineClassSelectedInfo;
 import vc.helper.SocketHelper;
@@ -69,14 +70,19 @@ public class OnlineClassView extends JFrame {
 	private JButton continueButton = new JButton("继续学习");
 	private JButton deleteButton = new JButton("删除课程");
 	private JButton reviewButton = new JButton("回顾复习");
-	JButton videoButton = new JButton("播放视频");
-	JButton notesButton = new JButton("下载讲义");
+	private JButton videoButton = new JButton("播放视频");
+	private JButton notesButton = new JButton("下载讲义");
+	private JButton reviewConfirmButton = new JButton("开始复习");
 	private JPanel buttonCombination = new JPanel();
 	private JTable courseTbl;
 	private JFrame learnFrame;
 	private JPanel learnPanel;
+	private JFrame reviewFrame;
+	private JPanel reviewPanel;
 	private String myCourseID;
 	private int myCurrentPeriod;
+	private JTextField periodAvailable = new JTextField(20);
+	boolean reviewFlag = false;
 
 	public OnlineClassView(String id) {
 		StudentId = id;
@@ -122,6 +128,8 @@ public class OnlineClassView extends JFrame {
 		
 		setLearnFrame();
 		learnFrame.setVisible(false);
+		setReviewFrame();
+		reviewFrame.setVisible(false);
 	}
 
 	public void setMyClassPanel() {
@@ -139,7 +147,7 @@ public class OnlineClassView extends JFrame {
 	private JTable getCourseTable() {
 		courseTbl = new JTable();
 		courseTbl.setPreferredSize(new Dimension(500, 500));
-		String[] columns = { "代码", "课程名称", "授课教师", "总课时", "当前课时" };
+		String[] columns = { "代码", "课程名称", "授课教师", "总课时", "当前课时", "状态" };
 		DefaultTableModel model = new DefaultTableModel(columns, 0)
 		{
 			public boolean isCellEditable(int row, int column)
@@ -163,15 +171,20 @@ public class OnlineClassView extends JFrame {
 			for (int j = 0; j < courseSelectedlist.size(); j++) {
 				period = courseSelectedlist.get(j).getCurrentPeriod();
 				}
-				Object[] rowData = { temp.getId(), temp.getName(), temp.getTeacher(),
-						temp.getPeriod(), period };
-				model.addRow(rowData);
+			String states;
+			if(temp.getPeriod() == period)
+			{
+				states = "已学完";
+			}
+			else
+			{
+				states = "学习中";
+			}
+			Object[] rowData = { temp.getId(), temp.getName(), temp.getTeacher(),
+						temp.getPeriod(), period, states};
+				
+			model.addRow(rowData);
 		}
-		courseTbl.getColumnModel().getColumn(0).setPreferredWidth(40);
-		courseTbl.getColumnModel().getColumn(1).setPreferredWidth(100);
-		courseTbl.getColumnModel().getColumn(2).setPreferredWidth(40);
-		courseTbl.getColumnModel().getColumn(3).setPreferredWidth(60);
-		courseTbl.getColumnModel().getColumn(4).setPreferredWidth(80);
 		return courseTbl;
 	}
 
@@ -208,26 +221,39 @@ public class OnlineClassView extends JFrame {
 					return;
 				}
 				int currentRow = courseTbl.getSelectedRow();
-				String courseState = (String) courseTbl.getValueAt(currentRow, 6);
-				if (courseState == "未选") {
-					JOptionPane.showMessageDialog(null, "尚未选择该课程！");
+				int n = JOptionPane.showConfirmDialog(null, "确认不再学习本课程吗?您的进度将会丢失", 
+						"确认删除框", JOptionPane.YES_NO_OPTION);
+				if (n == JOptionPane.YES_OPTION) {
+					String courseID = (String) courseTbl.getValueAt(currentRow, 0);
+					if (new IOnlineClassImpl(sockethelper).cancelClass(courseID, StudentId, 0)) {
+						JOptionPane.showMessageDialog(null, "已成功删除课程！");
+					} else {
+						JOptionPane.showMessageDialog(null, "删除课程失败！");
+					}
+					// refresh
+					setMyClassPanel();
+					setAllClassePanelPanel();
+				}
+				else if (n == JOptionPane.NO_OPTION) {
 					return;
 				}
-				String courseID = (String) courseTbl.getValueAt(currentRow, 0);
-				if (new IOnlineClassImpl(sockethelper).cancelClass(courseID, StudentId, 0)) {
-					JOptionPane.showMessageDialog(null, "已成功退选课程！");
-					courseTbl.setValueAt("未选", currentRow, 6);
-				} else {
-					JOptionPane.showMessageDialog(null, "退课失败！");
-				}
-				// refresh
-				setMyClassPanel();
-				setAllClassePanelPanel();
 			}
 		});
 		
 		this.reviewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int currentRow = courseTbl.getSelectedRow();
+				String courseID = (String) courseTbl.getValueAt(currentRow, 0);
+				int currentPeriod = (int) courseTbl.getValueAt(currentRow, 4);
+				myCourseID = courseID;
+				myCurrentPeriod = currentPeriod;
+				if((int)courseTbl.getValueAt(currentRow, 4) == 1)
+				{
+					JOptionPane.showMessageDialog(null, "您还没有已经完成的课时！");
+					return;
+				}
+				myCourseID = courseID;
+				reviewFrame.setVisible(true);
 			}
 		});
 		
@@ -263,6 +289,26 @@ public class OnlineClassView extends JFrame {
 				}
 			}
 		});
+		
+		this.reviewConfirmButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String chosedPeriod = (String) periodAvailable.getText();
+				int chosedP = Integer.valueOf(chosedPeriod);
+				if(chosedP >= 1 && chosedP < myCurrentPeriod)
+				{
+					myCurrentPeriod = chosedP;
+					reviewFlag = true;
+					reviewFrame.setVisible(false);
+					resetLearnFrame();
+					learnFrame.setVisible(true);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "不合法的课时数！");
+					return;
+				}
+			}
+		});
 	
 	}
 	void setLearnFrame()
@@ -274,21 +320,33 @@ public class OnlineClassView extends JFrame {
 		learnFrame.setTitle("学习课程");
 		learnFrame.addWindowListener(new WindowAdapter() {
 	        public void windowClosing(WindowEvent we) {
-	          int result = JOptionPane.showConfirmDialog(learnFrame,
-	              "要标记本课时为已完成吗 ?", "提示 : ",
-	              JOptionPane.YES_NO_OPTION);
-	          if (result == JOptionPane.YES_OPTION)
+	        	if(!reviewFlag) {
+	  	          int result = JOptionPane.showConfirmDialog(learnFrame,
+	  		              "要标记本课时为已完成吗 ?", "提示 : ",
+	  		              JOptionPane.YES_NO_OPTION);
+	  		          if (result == JOptionPane.YES_OPTION)
+	  		          {
+	  		        	  if (new IOnlineClassImpl(sockethelper).forward(myCourseID, StudentId, myCurrentPeriod)) {
+	  							JOptionPane.showMessageDialog(null, "已完成当前课时！");
+	  							setMyClassPanel();
+	  						} else {
+	  							JOptionPane.showMessageDialog(null, "本课程已经全部学完！");
+	  						}
+	  		        	  learnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	  		          }
+	  		          else if (result == JOptionPane.NO_OPTION)
+	  		        	  learnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        	}
+	        	else
+	        	{
+	        		learnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 		
+	        	}
+	          File deleteCache = new File("cache/currentPlay.mp4");
+	          if(deleteCache.exists())
 	          {
-	        	  if (new IOnlineClassImpl(sockethelper).forward(myCourseID, StudentId, myCurrentPeriod)) {
-						JOptionPane.showMessageDialog(null, "已完成当前课时！");
-						setMyClassPanel();
-					} else {
-						JOptionPane.showMessageDialog(null, "本课程已经全部学完！");
-					}
-	        	  learnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        	  deleteCache.delete();
+	        	  System.out.println("视频缓存已清空");
 	          }
-	          else if (result == JOptionPane.NO_OPTION)
-	        	  learnFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	        }
 	      });
 	}
@@ -302,6 +360,18 @@ public class OnlineClassView extends JFrame {
 		learnPanel.add(notesButton);
 		learnFrame.add(learnPanel);
 
+	}
+	
+	void setReviewFrame()
+	{
+		reviewFrame = new JFrame();
+		reviewPanel = new JPanel();
+		reviewFrame.setVisible(false);
+		reviewFrame.setBounds(500, 100, 500, 350);
+		reviewFrame.setTitle("回顾课程");
+		reviewPanel.add(periodAvailable);
+		reviewPanel.add(reviewConfirmButton);
+		reviewFrame.add(reviewPanel);
 	}
 
 }
