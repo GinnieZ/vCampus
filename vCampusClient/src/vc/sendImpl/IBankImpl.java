@@ -33,7 +33,7 @@ public class IBankImpl implements IBank, MsgType {
 	    {
 	      this.os.writeInt(201);
 	      this.os.flush();
-	      System.out.println(bCad);
+	      System.out.println("IBankImpl " + bCad);
 	      BankInfo Banktemp = new BankInfo(bCad, 0.0D, "", "", 0.0D);
 	      
 	      this.os.writeObject(Banktemp);

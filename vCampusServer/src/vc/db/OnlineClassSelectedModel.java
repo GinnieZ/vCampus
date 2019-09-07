@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import vc.common.CourseSelectedInfo;
 import vc.common.OnlineClassSelectedInfo;
 
 public class OnlineClassSelectedModel implements Model
@@ -27,7 +25,8 @@ public class OnlineClassSelectedModel implements Model
 	    try
 	    {
 	      Statement stmt = this.con.createStatement();
-	      this.query = ("insert into tbCourseSelected values ('" + this.info.getId() + "','" + this.info.getSelector() + "');");
+	      this.query = ("insert into tbOnlineClassSelected values ('" + this.info.getId() + "','" 
+	      + this.info.getSelector() + "','" + 1 + "');");
 	      System.out.println(this.query);
 	      stmt.executeUpdate(this.query);
 	      return true;

@@ -93,8 +93,8 @@ public class MainFrame extends JFrame {
 //		txtUserName.setText("09017401");
 //		txtPassword.setText("123");
 		////管理员测试用！删除！
-		txtUserName.setText("a");
-		txtPassword.setText("a");
+		txtUserName.setText("09017408");
+		txtPassword.setText("123");
 		
 		comboType = new JComboBox();
 		comboType.setFont(new Font("微软雅黑", Font.PLAIN, 15));

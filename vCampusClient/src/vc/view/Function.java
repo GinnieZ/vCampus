@@ -204,9 +204,7 @@ public class Function extends JFrame {
 		btnModify.setBackground(new Color(102, 153, 204));
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SocketHelper sockethelper2 = new SocketHelper();
-				sockethelper2.getConnection();
-				BankView bankView=new BankView(sockethelper2, id);
+				BankView bankView=new BankView(id);
 				bankView.setVisible(true);
 				//
 			}

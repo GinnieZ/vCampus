@@ -742,7 +742,9 @@ public class ClientThread extends Thread implements MsgType {
 	    try
 	    {
 	      double result = bk.queryBalance(bankInfo);
-	      if (result != 0.0D)
+	      System.out.println("Client Thread " + result);
+//	      if (result != 0.0D)
+	      if (true)
 	      {
 	        this.oos.writeInt(2011);
 	        this.oos.writeDouble(result);

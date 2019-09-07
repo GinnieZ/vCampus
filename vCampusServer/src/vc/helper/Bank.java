@@ -25,9 +25,15 @@ public class Bank {
 	    {
 	      ResultSet rs = (ResultSet)this.model.search(info);
 	      
-	      rs.last();
-	      
-	      return Double.parseDouble(rs.getString("balance"));
+	      if(rs != null)
+	      {
+	    	  while(rs.next())
+	    	  {   	      
+	    		  String temp = rs.getString("balance");
+	    		  System.out.println("Bank: " + temp);
+	    	      return Double.parseDouble(temp);
+	    	  }
+	      }
 	    }
 	    catch (SQLException e)
 	    {

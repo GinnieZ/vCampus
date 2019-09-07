@@ -131,6 +131,7 @@ public class OnlineClass {
 	}
 
 	public boolean selectClass(OnlineClassSelectedInfo info) {
+		System.out.println("In OnlineClass.java");
 		return this.csModel.insert(info);
 	}
 
