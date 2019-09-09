@@ -12,7 +12,7 @@ public abstract interface IOnlineClass
   
   public abstract boolean deleteClass(OnlineClassInfo paramClassInfo);
   
-  public abstract boolean selectClass(String paramString, String id, int currentPeriod);
+  public abstract boolean selectClass(String paramString, String id);
   
   public abstract boolean cancelClass(String paramString, String id, int currentPeriod);
   

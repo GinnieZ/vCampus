@@ -15,10 +15,6 @@ public class DBConnection {
 	public static Connection getConnection() {
 		if (con == null) {
 			try {
-//		        Class.forName("com.hxtt.sql.access.AccessDriver");
-//		        System.out.println("Driver loaded");
-//		        con = DriverManager.getConnection(DBurl);
-
 				Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 				String url = "jdbc:ucanaccess://db/vCampus.mdb";
 				con = DriverManager.getConnection(url, "", "");

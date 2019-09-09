@@ -11,6 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI.NormalColor;
+
 import vc.common.UserInfo;
 import vc.helper.SocketHelper;
 import vc.send.ILogin;
@@ -23,6 +27,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JPasswordField;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -44,6 +50,28 @@ public class MainFrame extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				try { 
+					org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF(); 
+					BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.generalNoTranslucencyShadow;  
+					UIManager.put("RootPane.setupButtonVisible",false);
+					org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+					
+
+					} catch (Exception e) {                 
+						e.printStackTrace();            
+						}               
+
+				try {   
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());} 
+				catch (ClassNotFoundException e) { 
+					e.printStackTrace();} 
+				catch (InstantiationException e) { 
+						e.printStackTrace();} 
+				catch (IllegalAccessException e) { 
+							e.printStackTrace();} 
+				catch (UnsupportedLookAndFeelException e) { 
+								e.printStackTrace();}
+				
 				try {
 					MainFrame frame = new MainFrame();
 					frame.setVisible(true);
@@ -93,8 +121,8 @@ public class MainFrame extends JFrame {
 //		txtUserName.setText("09017401");
 //		txtPassword.setText("123");
 		////管理员测试用！删除！
-		txtUserName.setText("a");
-		txtPassword.setText("a");
+		txtUserName.setText("09017408");
+		txtPassword.setText("123");
 		
 		comboType = new JComboBox();
 		comboType.setFont(new Font("微软雅黑", Font.PLAIN, 15));
@@ -105,6 +133,7 @@ public class MainFrame extends JFrame {
 	    contentPane.add(comboType);
 	    
 		JButton btnNewButton = new JButton("登录");
+		btnNewButton.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setFont(new Font("微软雅黑", Font.PLAIN, 15));
 		btnNewButton.setBackground(new Color(0, 153, 204));
@@ -119,6 +148,7 @@ public class MainFrame extends JFrame {
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton2 = new JButton("注册");
+		btnNewButton2.setUI(new BEButtonUI().setNormalColor(NormalColor.green));
 		btnNewButton2.setForeground(Color.WHITE);
 		btnNewButton2.setFont(new Font("微软雅黑", Font.PLAIN, 15));
 		btnNewButton2.setBackground(new Color(102, 153, 153));

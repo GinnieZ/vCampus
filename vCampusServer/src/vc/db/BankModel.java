@@ -86,13 +86,17 @@ public class BankModel implements Model {
 	  public Object search(Object obj)///////////////////////////
 	  {
 	    this.info = ((BankInfo)obj);
+	    System.out.println("Bank Model: " + info.getId());
 	    if (!this.info.getId().equals(""))
 	    {
 	      this.query = ("select * from tbBank where userID='" + this.info.getId() + "' order by transferDate;");
-	      if (!this.info.getPwd().equals("")) {
-	        this.query = ("select * from tbBank where userID='" + this.info.getId() + "' and pwd='" + this.info.getPwd() + "' order by transferDate;");
-	      }
+	      System.out.println(this.query);
 	    }
+	    else if (!this.info.getPwd().equals("")) {
+	        this.query = ("select * from tbBank where userID='" + this.info.getId() 
+	        + "' and pwd='" + this.info.getPwd() + "' order by transferDate;");
+	        System.out.println(this.query);
+	      }
 	    try
 	    {
 	      Statement stmt = this.con.createStatement(1004, 1007);

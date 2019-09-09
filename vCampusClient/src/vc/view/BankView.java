@@ -43,7 +43,7 @@ public class BankView extends JFrame {
 	private JPanel jpT5;
 	
 	
-	private SocketHelper sockethelper;
+	private SocketHelper sockethelper = new SocketHelper();
 	
 	private JTextField cardIDField;//银行账号(余额查询)
 	private JTextField cardIDField2;//银行账号(转账)
@@ -60,8 +60,7 @@ public class BankView extends JFrame {
 	
 	String id = null;
 	
-	 public BankView(SocketHelper sockethelper, String stuId) {
-		 this.sockethelper = sockethelper;
+	 public BankView(String stuId) {
 		 sockethelper.getConnection();
 		 this.id = stuId;
 		 setMainPanel();
@@ -150,7 +149,7 @@ public class BankView extends JFrame {
 			          JOptionPane.showMessageDialog(null, "请输入内容~");
 			          return;
 			        }
-			        Double test = Double.valueOf(new IBankImpl(sockethelper,id).checkAccount(Bid));
+			        Double test = new IBankImpl(sockethelper,id).checkAccount(Bid);
 			        
 			        BankView.this.banlanceField.setText(String.valueOf(test));
 			        BankView.this.banlanceField.setEditable(false);

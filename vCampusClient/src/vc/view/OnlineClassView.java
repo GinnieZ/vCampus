@@ -9,15 +9,21 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,6 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.print.DocFlavor.URL;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,6 +44,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
@@ -61,6 +69,7 @@ import vc.sendImpl.ISelectCourseImpl;
 public class OnlineClassView extends JFrame {
 	private JPanel myClassPanel = new JPanel();
 	private JPanel allClassePanel = new JPanel();
+	private JScrollPane allClasseScrollPanel = new JScrollPane();
 	private JScrollPane courseScrollPane = new JScrollPane();
 	private JScrollPane timetableScrollPane = new JScrollPane();
 	private SocketHelper sockethelper = new SocketHelper();
@@ -71,6 +80,8 @@ public class OnlineClassView extends JFrame {
 	private JButton reviewButton = new JButton("回顾复习");
 	private JButton videoButton = new JButton("播放视频");
 	private JButton notesButton = new JButton("下载讲义");
+	private JButton selectButton = new JButton("选课");
+	private JButton returnButton = new JButton("返回");
 	private JButton reviewConfirmButton = new JButton("开始复习");
 	private JButton preButton = new JButton("上一个");
 	private JButton nextButton = new JButton("下一个");
@@ -84,16 +95,28 @@ public class OnlineClassView extends JFrame {
 	private int myCurrentPeriod;
 	private JTextField periodAvailable = new JTextField(20);
 	boolean reviewFlag = false;
-	List<OnlineClassInfo> list;
-	int numClass;
-	int currentClass;
-
+	private  List<OnlineClassInfo> list;
+	private int numClass;
+	private int currentClass;
+	private List<JLabel> labelList;
+	OnlineClassInfo theClass = null;
+	
 	public OnlineClassView(String id) {
 		StudentId = id;
 		sockethelper.getConnection();
 		setMainPanel();
 		this.dispose();
 		action();
+		selectAction();
+		addWindowListener(new WindowAdapter() {
+	        public void windowClosing(WindowEvent we) {
+	        	File scFileDir = new File("cache");
+	            File TrxFiles[] = scFileDir.listFiles();
+	            for(File curFile:TrxFiles) {
+	                curFile.delete();  
+	            }
+	        }
+		});
 	}
 
 	public class JTabbedPaneDemo extends JPanel {
@@ -192,18 +215,187 @@ public class OnlineClassView extends JFrame {
 	}
 
 	public void setAllClassePanelPanel() {
+		allClassePanel.removeAll();
+		allClassePanel.repaint();
+		
 		list = new IOnlineClassImpl(this.sockethelper).EnquiryAllClass();
 		if(list.isEmpty())
 		{
 			JOptionPane.showMessageDialog(null, "没有任何课程！");
 			return;
 		}
+		
+		OnlineClassInfo tempClass;
+		ImageIcon img;
+		String path;
 		numClass = list.size();
-		currentClass = 0;
-		OnlineClassInfo showClass = (OnlineClassInfo) list.get(currentClass);
+		labelList = new ArrayList<>();
+		for(int i = 0; i < numClass; i++)
+		{
+			tempClass = (OnlineClassInfo) list.get(i);
+			path =  "cache/" + (i+1) + ".jpg";
+			if(new IOnlineClassImpl(this.sockethelper).getImg(tempClass.getId(), path))
+			{
+				img = new ImageIcon(path);
+				Image image = img.getImage();         
+				Image smallImage = image.getScaledInstance(140,200,image.SCALE_FAST);
+				ImageIcon smallIcon = new ImageIcon(smallImage);
+				JLabel imgLabel = new JLabel();
+				imgLabel.setIcon(smallIcon);
+				imgLabel.setName(String.valueOf(i + 1));
+//				imgLabel.setPreferredSize(new Dimension(100, 80));
+				allClassePanel.add(imgLabel);
+				labelList.add(imgLabel);
+			}
+		}
+		lableAction();
+
 	}
+	
+	void resetAllCoursePanel(String theID)
+	{
+		allClassePanel.removeAll();
+		String path =  "cache/" + theID + ".jpg";
+		ImageIcon img = new ImageIcon(path);
+		Image image = img.getImage();         
+		Image smallImage = image.getScaledInstance(280,400,image.SCALE_FAST);
+		ImageIcon smallIcon = new ImageIcon(smallImage);
+		JLabel imgLabel = new JLabel();
+		imgLabel.setIcon(smallIcon);
+		allClassePanel.add(imgLabel);
+		List<OnlineClassInfo> searchClass = new IOnlineClassImpl(this.sockethelper)
+				.EnquiryClassById(theID);
+		if(!searchClass.isEmpty())
+		{
+			theClass = searchClass.get(0);
+		}
+		JLabel theClassName = new JLabel("课程名称 " + theClass.getName());
+		JLabel theClassTeacher = new JLabel("授课教师 " + theClass.getTeacher());
+		JLabel theClassPeriod = new JLabel(String.valueOf("总课时数 " + theClass.getPeriod()));
+		Box box = Box.createVerticalBox();
+		box.add(theClassName);
+		box.add(theClassTeacher);
+		box.add(theClassPeriod);
 
+		JLabel introText = new JLabel("课程简介");
+		box.add(introText);
+		
+		JTextArea intro = new JTextArea(20, 20);
+		path = "cache/" + theID + ".txt";
+		if(!new IOnlineClassImpl(this.sockethelper).getIntro(theID, path))
+		{
+			JOptionPane.showMessageDialog(null, "该课程暂无简介！");
+		}
+		else {
+			File selFile = new File(path);
+			try {
+				BufferedReader reader=new BufferedReader(new InputStreamReader(new FileInputStream(selFile),"gbk"));
+				String line=null;
+				while ((line=reader.readLine())!=null) {
+					intro.append(line+"\n");
+					}
+				} catch (Exception e1) {
+				e1.printStackTrace();
+				}
+			
+			intro.setEditable(false);
+			intro.setBorder(null); 
+			intro.setLineWrap(true);
+			box.add(intro);
+		}
 
+		allClassePanel.add(box);
+		
+		this.returnButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setAllClassePanelPanel();
+			}
+		});
+		
+		List<OnlineClassInfo> selectClass = new IOnlineClassImpl(this.sockethelper)
+				.EnquirySelectClass(StudentId);
+		boolean flag = false;
+		for (int i = 0; i < selectClass.size(); i++) {
+			OnlineClassInfo tempOCI = selectClass.get(i);
+			System.out.println("the class id is: " + tempOCI.getId());
+			if(tempOCI.getId().equals(theID))
+			{
+				flag = true;
+				break;
+			}
+		}
+		if(flag)
+		{
+			selectButton.setEnabled(false);
+		}
+		else
+		{
+			selectButton.setEnabled(true);
+		}
+		
+		Box bottonBox = Box.createVerticalBox();
+		bottonBox.add(selectButton);
+		bottonBox.add(returnButton);
+		allClassePanel.add(bottonBox);
+		allClassePanel.validate();
+		allClassePanel.repaint();
+	}
+	
+	private void selectAction()
+	{
+		this.selectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (new IOnlineClassImpl(sockethelper).selectClass(theClass.getId(), StudentId)) {
+					JOptionPane.showMessageDialog(null, "已成功添加课程！");
+				} else {
+					JOptionPane.showMessageDialog(null, "添加课程失败！");
+				}
+				courseScrollPane.setViewportView(getCourseTable());
+				setAllClassePanelPanel();
+			}
+		});
+	}
+	
+	private void lableAction()
+	{
+		currentClass = 0;
+		while(currentClass < labelList.size())
+		{
+			labelList.get(currentClass).addMouseListener(new MouseListener(){
+				public void mouseClicked(MouseEvent e) {
+					JLabel tempLabel = (JLabel) e.getSource();
+					
+					
+					resetAllCoursePanel(tempLabel.getName());
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			currentClass++;
+		}
+	}
 	private void action() {
 		this.continueButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -330,12 +522,17 @@ public class OnlineClassView extends JFrame {
 		learnFrame.setTitle("学习课程");
 		learnFrame.addWindowListener(new WindowAdapter() {
 	        public void windowClosing(WindowEvent we) {
-		          File deleteCache = new File("cache/currentPlay.mp4");
-		          if(deleteCache.exists())
-		          {
-		        	  deleteCache.delete();
-		        	  System.out.println("视频缓存已清空");
-		          }
+//	        	File scFileDir = new File("cache");
+//	            File TrxFiles[] = scFileDir.listFiles();
+//	            for(File curFile:TrxFiles) {
+//	                curFile.delete();  
+//	            }
+//		          File deleteCache = new File("cache/currentPlay.mp4");
+//		          if(deleteCache.exists())
+//		          {
+//		        	  deleteCache.delete();
+//		        	  System.out.println("缓存已清空");
+//		          }
 	        	if(!reviewFlag) {
 	  	          int result = JOptionPane.showConfirmDialog(learnFrame,
 	  		              "要标记本课时为已完成吗 ?", "提示 : ",

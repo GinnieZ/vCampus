@@ -13,6 +13,8 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 import vc.common.MsgType;
 import vc.common.OnlineClassInfo;
 import vc.common.OnlineClassSelectedInfo;
@@ -177,8 +179,8 @@ public class IOnlineClassImpl implements IOnlineClass, MsgType {
 		return null;
 	}
 
-	public boolean selectClass(String subNum, String id, int currentPeriod) {
-		OnlineClassSelectedInfo temp = new OnlineClassSelectedInfo(subNum, id, currentPeriod);
+	public boolean selectClass(String subNum, String id) {
+		OnlineClassSelectedInfo temp = new OnlineClassSelectedInfo(subNum, id, 1);
 		try {
 			this.os.writeInt(1011);
 			this.os.flush();
@@ -320,7 +322,6 @@ public class IOnlineClassImpl implements IOnlineClass, MsgType {
 			this.os.flush();
 
 			fos = new FileOutputStream(path);
-			fos = new FileOutputStream(path);	
 			
 			int length = 0;
 			byte[] getByte = new byte[1024];
@@ -329,12 +330,10 @@ public class IOnlineClassImpl implements IOnlineClass, MsgType {
 				if(length < 1024)
 				{
 					int tempL = 1024 - length;
-					System.out.println(tempL);
 					fos.write(getByte, 0, tempL);
 					fos.flush();
 					break;
 				}
-				System.out.println(length);
 				fos.write(getByte, 0, length);
 				fos.flush();
 				try {
@@ -383,12 +382,10 @@ public class IOnlineClassImpl implements IOnlineClass, MsgType {
 				if(length < 1024)
 				{
 					int tempL = 1024 - length;
-					System.out.println(tempL);
 					fos.write(getByte, 0, tempL);
 					fos.flush();
 					break;
 				}
-				System.out.println(length);
 				fos.write(getByte, 0, length);
 				fos.flush();
 				try {
@@ -436,5 +433,104 @@ public class IOnlineClassImpl implements IOnlineClass, MsgType {
 		return false;
 	}
 	
+	public boolean getImg(String mString, String path) {
+
+		FileOutputStream fos = null;
+		try {
+			String objPath = "db/OnlineClass/" + mString + "/cover.jpg";
+			this.os.writeInt(1021);
+			this.os.flush();
+			this.os.writeObject(objPath);
+			this.os.flush();
+			fos = new FileOutputStream(path);	
+			int length = 0;
+			byte[] getByte = new byte[1024];
+			System.out.println("准备接收图片");
+			while ((length = this.dis.read(getByte)) != -1) {
+				if(length < 1024)
+				{
+					int tempL = 1024 - length;
+					fos.write(getByte, 0, tempL);
+					fos.flush();
+					break;
+				}
+				fos.write(getByte, 0, length);
+				fos.flush();
+				try {
+					Thread.sleep((long) 0.001);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+            } 
+	        fos.flush();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.getStackTrace();
+			return false;
+		}
+		finally {
+			if(fos != null){
+            try {
+    			System.out.println("图片接收完毕");
+    			fos.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    				}           
+            }
+		}
+		return true;
+	}
 	
+	public boolean getIntro(String mString, String path) {
+		
+		FileOutputStream fos = null;
+		try {
+			String objPath = "db/OnlineClass/" + mString + "/Intro.txt";
+			this.os.writeInt(1021);
+			this.os.flush();
+			this.os.writeObject(objPath);
+			this.os.flush();
+			fos = new FileOutputStream(path);	
+			int length = 0;
+			byte[] getByte = new byte[1024];
+			System.out.println("准备接收简介");
+			while ((length = this.dis.read(getByte)) != -1) {
+				if(length < 1024)
+				{
+					int tempL = 1024 - length;
+					fos.write(getByte, 0, tempL);
+					fos.flush();
+					break;
+				}
+				fos.write(getByte, 0, length);
+				fos.flush();
+				try {
+					Thread.sleep((long) 0.001);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+            } 
+	        fos.flush();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.getStackTrace();
+			return false;
+		}
+		finally {
+			if(fos != null){
+            try {
+    			System.out.println("简介接收完毕");
+    			fos.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    				}           
+            }
+		}
+		return true;
+	
+	}
 }
