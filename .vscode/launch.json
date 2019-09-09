@@ -1,0 +1,175 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-PlayerMain<vCampusClient>",
+            "request": "launch",
+            "mainClass": "com.main.PlayerMain",
+            "projectName": "vCampusClient"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Native<vCampusClient>",
+            "request": "launch",
+            "mainClass": "com.sun.jna.Native",
+            "projectName": "vCampusClient"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TlbImp<vCampusClient>",
+            "request": "launch",
+            "mainClass": "com.sun.jna.platform.win32.COM.tlb.TlbImp",
+            "projectName": "vCampusClient"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-MainWindow<vCampusClient>",
+            "request": "launch",
+            "mainClass": "com.views.MainWindow",
+            "projectName": "vCampusClient"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-MainFrame<vCampusClient>",
+            "request": "launch",
+            "mainClass": "vc.view.MainFrame",
+            "projectName": "vCampusClient"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ShopView<vCampusClient>",
+            "request": "launch",
+            "mainClass": "vc.view.ShopView",
+            "projectName": "vCampusClient"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AccessDriver<vCampusServer>",
+            "request": "launch",
+            "mainClass": "com.hxtt.sql.access.AccessDriver",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Admin<vCampusServer>",
+            "request": "launch",
+            "mainClass": "com.hxtt.sql.admin.Admin",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-HxttService<vCampusServer>",
+            "request": "launch",
+            "mainClass": "com.hxtt.sql.admin.HxttService",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Main<vCampusServer>",
+            "request": "launch",
+            "mainClass": "net.ucanaccess.console.Main",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-LdapAuthBean<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.auth.LdapAuthBean",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DbBackup<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.lib.tar.DbBackup",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TarGenerator<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.lib.tar.TarGenerator",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TarReader<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.lib.tar.TarReader",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-OdbcUtil<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.server.OdbcUtil",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Server<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.server.Server",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ServerAcl<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.server.ServerAcl",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-WebServer<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.server.WebServer",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-CodeSwitcher<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.util.CodeSwitcher",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DatabaseManager<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.util.DatabaseManager",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DatabaseManagerSwing<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.util.DatabaseManagerSwing",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-MainInvoker<vCampusServer>",
+            "request": "launch",
+            "mainClass": "org.hsqldb.util.MainInvoker",
+            "projectName": "vCampusServer"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Test<vCampusServer>",
+            "request": "launch",
+            "mainClass": "vc.test.Test",
+            "projectName": "vCampusServer"
+        }
+    ]
+}

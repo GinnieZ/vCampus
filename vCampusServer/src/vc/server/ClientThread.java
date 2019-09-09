@@ -772,18 +772,27 @@ public class ClientThread extends Thread implements MsgType {
 	  }
 	}
 	
-	private void Hospital(int cmd) {
+	private void Hospital(int cmd){
 		PatientInfo PInfo = null;
 		MedcineInfo MInfo = null;
 		UserInfo user = null;
 		Hospital hs = new Hospital();
 		String[] rs;
 		String[] unpaidMedcine;
+		String id = null;
+		String prescription = null;
 		//System.out.println(11);
 		if (cmd / 100 == 8) {
 			try {
+				if(cmd == 821 || cmd == 820) {
+					id = (String) this.ois.readObject();
+				}
 				if(cmd == 805) {
 					user = (UserInfo) this.ois.readObject();
+				}
+				if(cmd == 822) {
+					id = (String) this.ois.readObject();
+					prescription = (String) this.ois.readObject();
 				}
 				if (cmd == 803 || cmd == 806 || cmd == 808 || cmd == 809 || cmd == 823) {
 					//System.out.println(12);
@@ -803,7 +812,7 @@ public class ClientThread extends Thread implements MsgType {
 			/*
 			case 801:
 				try {
-					//涓嶇煡閬�801骞插槢鐨�
+					//不知道801干嘛的
 					PatientInfo[] result = hs.queryCourse();
 					if (result != null) {
 						this.oos.writeInt(8011);
@@ -893,7 +902,7 @@ public class ClientThread extends Thread implements MsgType {
 					rs = (String[])hs.getPatientInfo(PInfo);
 					//System.out.println(14);
 					//System.out.println(unpaidMedcine[0]);
-					//System.out.println("闀垮害锛�"+unpaidMedcine.length);
+					//System.out.println("长度："+unpaidMedcine.length);
 					PInfo.setName(rs[0]);
 					PInfo.setGender(rs[1]);
 					PInfo.setAge(Integer.parseInt(rs[2]));
@@ -915,7 +924,7 @@ public class ClientThread extends Thread implements MsgType {
 			case 808:
 				try {
 					//System.out.println(11);
-					//濂藉儚娌℃湁鐢ㄥ埌
+					//好像没有用到
 					rs = (String[])hs.getPatientInfo(PInfo);
 					unpaidMedcine = hs.searchUnpaidMedcine(PInfo);
 					PInfo.setName(rs[0]);
@@ -959,6 +968,38 @@ public class ClientThread extends Thread implements MsgType {
 					e.printStackTrace();
 				}
 				break;
+			case 820:
+				try {
+					rs = hs.readDay(id);
+					//hs.prescribe(id, prescription);
+					this.oos.writeObject(rs);
+					this.oos.flush();
+					this.oos.writeInt(8201);
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 821:
+				try {
+					rs = hs.readPrescription(id);
+					this.oos.writeObject(rs);
+					this.oos.flush();
+					this.oos.writeInt(8211);
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
+			case 822:
+				try {
+					hs.prescribe(id, prescription);
+					this.oos.writeInt(8221);
+					this.oos.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
 			case 823:
 				try {
 					int wb = hs.addMedcine(MInfo) ? 8231:8232;
@@ -970,7 +1011,7 @@ public class ClientThread extends Thread implements MsgType {
 				break;
 			}
 		} else {
-			System.out.println("鏈煡鎸囦护");
+			System.out.println("未知指令");
 		}
 	}
 	

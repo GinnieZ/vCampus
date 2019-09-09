@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import vc.common.CourseInfo;
@@ -74,7 +75,7 @@ public class PatientModel implements Model{
 		this.info = ((PatientInfo)obj);
 	    try
 	    {
-	      //鐩墠鍙兘淇敼u_UnpaidMedcine
+	      //目前只能修改u_UnpaidMedcine
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
 	  	        ("delete from tbMedcineSelected where selector='" + this.info.getId() + "';");
@@ -182,7 +183,7 @@ public class PatientModel implements Model{
 	      this.query = ("select * from tbMedcineSelected where selector='" + this.info.getId() + "';");
 	    } else if (!this.info.getName().equals("")) {
 	      this.query = ("select * from tbMedcineSelected where u_Name='" + this.info.getName() + "';");
-	      System.out.println("searchUnpaidMedcine閿欏暒锛侊紒锛�");
+	      System.out.println("searchUnpaidMedcine错啦！！！");
 	    }
 	    try
 	    {
@@ -227,7 +228,7 @@ public class PatientModel implements Model{
 	      System.out.println(this.query);
 	      ResultSet rs = stmt.executeQuery(this.query);
 	      if (rs != null) {
-	    	rs.beforeFirst();//灏嗙粨鏋滈泦鎸囬拡鎸囧洖鍒板紑濮嬩綅缃紝杩欐牱鎵嶈兘閫氳繃while鑾峰彇rs涓殑鏁版嵁
+	    	rs.beforeFirst();//将结果集指针指回到开始位置，这样才能通过while获取rs中的数据
 	    	while(rs.next()){
 	    	   nrow++;
 	    	}
@@ -278,4 +279,78 @@ public class PatientModel implements Model{
 	    return null;
 	  }
 	
+	public boolean prescribe(String id,String prescription) {
+		try
+	    {
+	      Statement stmt = this.con.createStatement();
+	      this.query = ("update tbRegister set prescription='" + prescription + "' where register='" + id + "' and registerDate='" + date + "';");
+	      System.out.println(this.query);
+	      if (stmt.executeUpdate(this.query) != 0) {
+	          return true;
+	      }
+	    }
+	    catch (SQLException e)
+	    {
+	      e.printStackTrace();
+	    }
+		return false;
+	}
+	
+	public ResultSet readMHistory(String id) {
+		//System.out.println("到数据库了");
+		try
+	    {
+	      Statement stmt = this.con.createStatement();
+	      this.query = ("select * from tbRegister where u_ID='" + id + "';");
+	      System.out.println(this.query);
+	      ResultSet rs = stmt.executeQuery(this.query);
+	      if (rs != null) {
+	          return rs;
+	      }
+	    }
+	    catch (SQLException e)
+	    {
+	      e.printStackTrace();
+	    }
+		return null;
+	}
+	
+	public String[] readPrescription(String id, int i) {
+		System.out.println("到数据库了");
+		try
+	    {
+	      Statement stmt = this.con.createStatement();
+	      this.query = ("select * from tbRegister where u_ID='" + id + "';");
+	      System.out.println(this.query); 
+	      ResultSet rs = stmt.executeQuery(this.query);
+	      Vector<String> v = new Vector();
+	      if(i == 1) {
+		      while(rs.next()) {
+		    	  String temp = new String(rs.getString("registerDate"));
+		    	  temp = temp.substring(0,temp.length()-11); 
+		    	  //System.out.println(temp);
+			      v.add(temp);
+		      };
+	      }
+	      if(i == 2) {
+		      while(rs.next()) {
+		    	  String temp =  new String(" ");
+		    	  if(rs.getString("prescription").equals("")) {
+		    		  temp =  new String(" ");
+		    	  }
+		    	  else{
+		    		  temp = new String(rs.getString("prescription"));
+		    	  }
+			      v.add(temp);
+		      };
+	      }
+	      String[] x= (String[])v.toArray(new String[rs.getRow()]);
+	      return x;
+	    }
+	    catch (SQLException e)
+	    {
+	      e.printStackTrace();
+	    }
+		return null;
+	}
 }
