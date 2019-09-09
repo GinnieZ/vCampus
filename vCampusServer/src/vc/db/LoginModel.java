@@ -28,7 +28,8 @@ public class LoginModel
     {
       Statement stmt = this.con.createStatement();
       this.query = 
-        ("insert into tbUser values ('" + this.info.getStuId() + "','" + this.info.getPwd() + "','" + this.info.getType() + "','" + this.info.getName() + "');");
+        ("insert into tbUser values ('" + this.info.getStuId() + "','" + this.info.getPwd() 
+        + "','" + this.info.getType() + "','" + this.info.getName() + "');");
       System.out.println(this.query);
       if (stmt.executeUpdate(this.query) != 0) {
         return true;

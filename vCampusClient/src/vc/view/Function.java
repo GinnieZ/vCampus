@@ -17,6 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI.NormalColor;
+
 import vc.common.UserInfo;
 
 import vc.helper.SocketHelper;
@@ -30,6 +33,7 @@ public class Function extends JFrame {
 	private SocketHelper sockethelper;
 	
 	public Function(String myid, int t) {
+		setTitle("–Èƒ‚–£‘∞œµÕ≥");
 		sockethelper = new SocketHelper();
         sockethelper.getConnection();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,6 +58,7 @@ public class Function extends JFrame {
 		}
 
 		JButton btnSchoolRoll = new JButton("—ßºÆ");
+		btnSchoolRoll.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnSchoolRoll.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnSchoolRoll.setForeground(Color.WHITE);
 		btnSchoolRoll.setBackground(new Color(102, 153, 204));
@@ -79,6 +84,7 @@ public class Function extends JFrame {
 		contentPane.add(btnSchoolRoll);
 		
 		JButton btnCourseSelect = new JButton("—°øŒ");
+		btnCourseSelect.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnCourseSelect.setForeground(Color.WHITE);
 		btnCourseSelect.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnCourseSelect.setBackground(new Color(102, 153, 204));
@@ -102,6 +108,7 @@ public class Function extends JFrame {
 		contentPane.add(btnCourseSelect);
 		
 		JButton btnDorm = new JButton("Àﬁ…·");
+		btnDorm.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnDorm.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnDorm.setForeground(Color.WHITE);
 		btnDorm.setBackground(new Color(102, 153, 204));
@@ -118,6 +125,7 @@ public class Function extends JFrame {
 		contentPane.add(btnDorm);
 		
 		JButton btnHospital = new JButton("“Ω‘∫");
+		btnHospital.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnHospital.setForeground(Color.WHITE);
 		btnHospital.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnHospital.setBackground(new Color(102, 153, 204));
@@ -141,6 +149,7 @@ public class Function extends JFrame {
 		contentPane.add(btnHospital);
 		
 		JButton btnLibrary = new JButton("Õº Èπ›");
+		btnLibrary.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnLibrary.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnLibrary.setForeground(Color.WHITE);
 		btnLibrary.setBackground(new Color(102, 153, 204));
@@ -163,6 +172,7 @@ public class Function extends JFrame {
 		contentPane.add(btnLibrary);
 		
 		JButton btnStore = new JButton("…ÃµÍ");
+		btnStore.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnStore.setForeground(Color.WHITE);
 		btnStore.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnStore.setBackground(new Color(102, 153, 204));
@@ -175,6 +185,7 @@ public class Function extends JFrame {
 		contentPane.add(btnStore);
 		
 		JButton btnOnlineClass = new JButton("‘⁄œﬂøŒÃ√");
+		btnOnlineClass.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnOnlineClass.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnOnlineClass.setForeground(Color.WHITE);
 		btnOnlineClass.setBackground(new Color(102, 153, 204));
@@ -199,6 +210,7 @@ public class Function extends JFrame {
 		contentPane.add(btnOnlineClass);
 		
 		JButton btnModify = new JButton("“¯––π‹¿Ì");
+		btnModify.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		btnModify.setForeground(Color.WHITE);
 		btnModify.setFont(new Font("Œ¢»Ì—≈∫⁄", Font.PLAIN, 15));
 		btnModify.setBackground(new Color(102, 153, 204));

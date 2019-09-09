@@ -6,6 +6,9 @@ package vc.view;
 
 import javax.swing.*;
 
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
+import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI.NormalColor;
+
 import vc.common.UserInfo;
 import vc.helper.Login;
 
@@ -48,6 +51,7 @@ public class LoginView extends JFrame
 		JButton btnLogIn = new JButton("登录");
 		JButton btnSignIn = new JButton("注册");
 		JButton btnClean = new JButton("清除");
+		btnLogIn.setUI(new BEButtonUI().setNormalColor(NormalColor.lightBlue));
 		
 		GridBagLayout gbl=new GridBagLayout(); //实例化布局对象
 		btnPane.setLayout(gbl);

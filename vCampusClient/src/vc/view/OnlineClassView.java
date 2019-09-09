@@ -217,6 +217,7 @@ public class OnlineClassView extends JFrame {
 	public void setAllClassePanelPanel() {
 		allClassePanel.removeAll();
 		allClassePanel.repaint();
+		
 		list = new IOnlineClassImpl(this.sockethelper).EnquiryAllClass();
 		if(list.isEmpty())
 		{
@@ -247,7 +248,6 @@ public class OnlineClassView extends JFrame {
 				labelList.add(imgLabel);
 			}
 		}
-	
 		lableAction();
 
 	}

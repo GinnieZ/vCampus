@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/jackcess-2.1.11.jar"/>
 	<classpathentry kind="lib" path="lib/ucanload.jar"/>
 	<classpathentry kind="lib" path="lib/Access_JDBC30.jar"/>
+	<classpathentry kind="lib" path="lib/beautyeye_lnf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
