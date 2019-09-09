@@ -34,7 +34,7 @@ public class CheckStudentView extends JFrame{
 	private TextField checkMajor = new TextField(20);
 	private TextField checkDorm = new TextField(20);
 	private TextField searchIDText = new TextField(50);
-	private JButton searchButton = new JButton("搜索");
+	private JButton searchButton = new JButton("  搜索  ");
 	private JButton searchAll = new JButton("查询所有");
 	private JTextField textField_StuId = new JTextField();
 	private JScrollPane scrollPane_StuInfo = new JScrollPane();
@@ -60,6 +60,12 @@ public class CheckStudentView extends JFrame{
 		setTitle("查找学生学籍信息");
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		CheckStudentPanel = new JPanel();
+		scrollPane_StuInfo = new JScrollPane();
+		scrollPane_StuInfo.setViewportView(getStudentTable());		
+		CheckStudentPanel.add(searchButton);	
+		CheckStudentPanel.add(searchAll);
+		CheckStudentPanel.add(scrollPane_StuInfo);
+		add(CheckStudentPanel);  
 		
 		Box box = Box.createVerticalBox();
 		
@@ -86,15 +92,16 @@ public class CheckStudentView extends JFrame{
 		          return;
 		        }
 		        scrollPane_StuInfo.setViewportView(getStuTableById(stuId));
+		        scrollPane_StuInfo2.setViewportView(getStudentTable());
 		      }
 		});
 		
 		this.searchAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 		      {
-		        System.out.println("查找所有学生信息");
-		        		        
-		        scrollPane_StuInfo2.setViewportView(getStudentTable());
+		        System.out.println("查找所有学生信息"); 
+		        //CheckStudentView.this.scrollPane_StuInfo.setViewportView(CheckStudentView.this.getStudentTable());
+		        scrollPane_StuInfo.setViewportView(getStudentTable());
 		      }
 		});
 	}
@@ -102,7 +109,7 @@ public class CheckStudentView extends JFrame{
 
 	protected JTable getStudentTable() {
 
-		table_StuInfo2 = new JTable();
+		table_StuInfo = new JTable();
 		String[] columns = { "学生ID", "姓名", "年龄", "性别", "出生日期", "地址", "专业", "宿舍" };
 		DefaultTableModel model = new DefaultTableModel(columns, 0)
 		{
@@ -111,7 +118,7 @@ public class CheckStudentView extends JFrame{
 				return false;
 			}
 		};
-		table_StuInfo2.setModel(model);
+		table_StuInfo.setModel(model);
 		List<StudentRollInfo> list = new IStudentImpl(this.sockethelper).EnquiryAllStu(null);
 
 		for (int i = 0; i < list.size(); i++)
@@ -120,7 +127,7 @@ public class CheckStudentView extends JFrame{
 	      Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
 	      model.addRow(rowData);
 	    }
-	    return this.table_StuInfo2;
+	    return this.table_StuInfo;
 	
 	}
 

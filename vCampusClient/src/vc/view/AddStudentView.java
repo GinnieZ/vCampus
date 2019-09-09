@@ -1,9 +1,11 @@
 package vc.view;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,6 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import vc.common.StudentRollInfo;
 import vc.helper.SocketHelper;
@@ -21,25 +26,19 @@ public class AddStudentView extends JFrame{
 
 	private JPanel AddStudentPanel;
 	private String StudentId;
-	private SocketHelper sockethelper = new SocketHelper();
-	private TextField newID = new TextField(20);
-	private TextField newName = new TextField(20);
-	private TextField newSex = new TextField(20);
-	private TextField newAge= new TextField(20);
-	private TextField newBirthDate = new TextField(20);
-	private TextField newAddress = new TextField(20);
-	private TextField newMajor = new TextField(20);
-	private TextField newDorm = new TextField(20);
+	private TextField newID = new TextField("学号");
+	private TextField newName = new TextField("姓名");
+	private TextField newSex = new TextField("性别");
+	private TextField newAge= new TextField("年龄");
+	private TextField newBirthDate = new TextField("出生日期");
+	private TextField newAddress = new TextField("地址");
+	private TextField newMajor = new TextField("专业");
+	private TextField newDorm = new TextField("宿舍");
 	private JButton addConfirmButton = new JButton("确定添加");
-
-	JLabel IDLabel = new JLabel("学号");
-	JLabel nameLabel = new JLabel("姓名 ");
-	JLabel sexLabel = new JLabel("性别 ");
-	JLabel ageLabel = new JLabel("年龄  ");
-	JLabel birthLabel = new JLabel("出生日期 ");
-	JLabel addressLabel = new JLabel("家庭住址 ");
-	JLabel majorLabel = new JLabel("专业 ");
-	JLabel dormLabel = new JLabel("宿舍 ");
+	JScrollPane scrollPane_StuInfo = new JScrollPane();
+	private SocketHelper sockethelper = new SocketHelper();
+	private JTable table_StuInfo = new JTable();
+	private JButton refreshButton = new JButton("  刷新  ");
 	
 	public AddStudentView(String id) {
 		StudentId = id;
@@ -47,6 +46,31 @@ public class AddStudentView extends JFrame{
 		setMainPanel();
 		this.setVisible(false);
 		run();
+		
+	}
+
+	private Component getAllStuTable() {
+
+		table_StuInfo = new JTable();
+		String[] columns = { "学生ID", "姓名", "年龄", "性别", "出生日期", "地址", "专业", "宿舍" };
+		DefaultTableModel model = new DefaultTableModel(columns, 0)
+		{
+			public boolean isCellEditable(int row, int column)
+			{
+				return false;
+			}
+		};
+		table_StuInfo.setModel(model);
+		List<StudentRollInfo> list = new IStudentImpl(this.sockethelper).EnquiryAllStu(null);
+
+		for (int i = 0; i < list.size(); i++)
+	    {
+	      StudentRollInfo studentList = (StudentRollInfo)list.get(i);
+	      Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
+	      model.addRow(rowData);
+	    }
+	    return this.table_StuInfo;
+	
 	}
 
 	private void setMainPanel() {
@@ -56,18 +80,15 @@ public class AddStudentView extends JFrame{
 		setBounds(10, 20, 640, 357);
 		setTitle("增加学生学籍信息");
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		AddStudentPanel = new JPanel();      
+		AddStudentPanel = new JPanel();   
+		scrollPane_StuInfo = new JScrollPane();
+		scrollPane_StuInfo.setViewportView(getStudentTable());		
+		AddStudentPanel.add(addConfirmButton);	
+		AddStudentPanel.add(scrollPane_StuInfo);
+		add(AddStudentPanel);  
                 
 		Box box = Box.createVerticalBox();
-		Box box2 = Box.createVerticalBox();
-		box2.add(IDLabel);
-		box2.add(nameLabel);    
-	    box2.add(sexLabel);
-	    box2.add(ageLabel);
-	    box2.add(birthLabel);
-	    box2.add(addressLabel);
-	    box2.add(majorLabel);
-	    box2.add(dormLabel); 
+		 
 	    //文本
 		box.add(newID);			
 		box.add(newName);
@@ -78,12 +99,35 @@ public class AddStudentView extends JFrame{
 		box.add(newMajor);
 		box.add(newDorm);             
 		box.add(addConfirmButton); 
-		AddStudentPanel.add(box2);
+		box.add(refreshButton);
 		AddStudentPanel.add(box);
-		AddStudentPanel.add(addConfirmButton);
 		add(AddStudentPanel);      		
 	}
 	
+	private Component getStudentTable() {
+		
+		table_StuInfo = new JTable();
+		String[] columns = { "学生ID", "姓名", "年龄", "性别", "出生日期", "地址", "专业", "宿舍" };
+		DefaultTableModel model = new DefaultTableModel(columns, 0)
+		{
+			public boolean isCellEditable(int row, int column)
+			{
+				return false;
+			}
+		};
+		table_StuInfo.setModel(model);
+		List<StudentRollInfo> list = new IStudentImpl(this.sockethelper).EnquiryAllStu(null);
+
+		for (int i = 0; i < list.size(); i++)
+	    {
+	      StudentRollInfo studentList = (StudentRollInfo)list.get(i);
+	      Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
+	      model.addRow(rowData);
+	    }
+	    return this.table_StuInfo;
+	
+	}
+
 	private void run() {
 		this.addConfirmButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -126,10 +170,18 @@ public class AddStudentView extends JFrame{
 		        }
 		      }
 			});
-			}
+		this.refreshButton.addActionListener(new ActionListener()
+	    {
+	      public void actionPerformed(ActionEvent e)
+	      {
+	        AddStudentView.this.scrollPane_StuInfo.setViewportView(AddStudentView.this.getAllStuTable());
+	      }
+	    });
+		scrollPane_StuInfo.setViewportView(getAllStuTable());
+	}
 
 	protected void dialogClose() {
-		this.dispose();
+		//this.dispose();
 	}
 	
 }
