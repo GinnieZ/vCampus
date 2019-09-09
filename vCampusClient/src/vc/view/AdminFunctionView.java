@@ -15,7 +15,7 @@ public class AdminFunctionView extends JFrame{
 	
 	public AdminFunctionView(String myid)
 	{
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 120, 314, 256);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -26,10 +26,10 @@ public class AdminFunctionView extends JFrame{
 		JButton btnAdd = new JButton("增加学籍信息");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//
+				
 				AddStudentView myAddStudentView = new AddStudentView(id);
 				myAddStudentView.setVisible(true);
-				dispose();
+				//dispose();
 				
 			}
 		});
@@ -39,10 +39,10 @@ public class AdminFunctionView extends JFrame{
 		JButton btnDelete = new JButton("删除学籍信息");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//
+				
 				DeleteStudentView myDeleteStudentView = new DeleteStudentView(id);
 				myDeleteStudentView.setVisible(true);
-				dispose();
+				//dispose();
 			}
 		});
 		btnDelete.setBounds(20, 50, 93, 23);
@@ -51,10 +51,10 @@ public class AdminFunctionView extends JFrame{
 		JButton btnModify = new JButton("修改学籍信息");
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//
+				
 				ModifyStudentView myModifyStudentView = new ModifyStudentView(id);
 				myModifyStudentView.setVisible(true);
-				dispose();
+				//dispose();
 			}
 		});
 		btnModify.setBounds(20, 80, 93, 23);
@@ -65,10 +65,10 @@ public class AdminFunctionView extends JFrame{
 		JButton btnCheck = new JButton("查看学籍信息");
 		btnCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//
+				
 				CheckStudentView myCheckStudentView = new CheckStudentView(id);
 				myCheckStudentView.setVisible(true);
-				dispose();
+				//dispose();
 			}
 		});
 		btnCheck.setBounds(20, 110, 93, 23);

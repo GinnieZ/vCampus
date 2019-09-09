@@ -29,7 +29,7 @@ implements Model
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
 	      
-	        ("insert into tbStudentRoll values ('" + this.info.getId() + "','" + this.info.getName() + "','" + this.info.getAge() + "','" + this.info.getGender() + "','" + this.info.getBirthday() + "','" + this.info.getBirthPlace() + "','" /*+ this.info.getEntranceTime() + "','" + this.info.getPhoto() + "','" + this.info.getNation() + "','" */+ this.info.getDepartment() + "','" /*+ this.info.getMajor() + "','" */+ this.info.getDormitory() + "');");
+	        ("insert into tbStudentRoll values ('" + this.info.getId() + "','" + this.info.getName() + "','" + this.info.getAge() + "','" + this.info.getGender() + "','" + this.info.getBirthday() + "','" + this.info.getBirthPlace() + "','" + this.info.getDepartment() + "','" + this.info.getDormitory() + "');");
 	      System.out.println(this.query);
 	      if (stmt.executeUpdate(this.query) != 0) {
 	        return true;
@@ -50,7 +50,7 @@ implements Model
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
 	      
-	        ("update tbStudentRoll set stuName='" + this.info.getName() + "',age='" + this.info.getAge() + "',gender='" + this.info.getGender() + "',birthday='" + this.info.getBirthday() + "',birthPlace='" + this.info.getBirthPlace() + /*"',entranceTime='" + this.info.getEntranceTime() + "',photo='" + this.info.getPhoto() + "',nation='" + this.info.getNation() +*/ "',department='" + this.info.getDepartment() /*+ "',major='" + this.info.getMajor() */+ "',dormitory='" + this.info.getDormitory() + "' where ID='" + this.info.getId() + "';");
+	        ("update tbStudentRoll set stuName='" + this.info.getName() + "',age='" + this.info.getAge() + "',gender='" + this.info.getGender() + "',birthday='" + this.info.getBirthday() + "',birthPlace='" + this.info.getBirthPlace() +  "',department='" + this.info.getDepartment() + "',dormitory='" + this.info.getDormitory() + "' where ID='" + this.info.getId() + "';");
 	      System.out.println(this.query);
 	      if (stmt.executeUpdate(this.query) != 0) {
 	        return true;

@@ -19,7 +19,6 @@ import vc.sendImpl.IStudentImpl;
 
 public class AddStudentView extends JFrame{
 
-	public JFrame mainFrame;
 	private JPanel AddStudentPanel;
 	private String StudentId;
 	private SocketHelper sockethelper = new SocketHelper();
@@ -51,14 +50,13 @@ public class AddStudentView extends JFrame{
 	}
 
 	private void setMainPanel() {
-		// TODO Auto-generated method stub
-		mainFrame = new JFrame();
-		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 640, 357);
-		mainFrame.setTitle("学籍信息");
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		AddStudentPanel = new JPanel();
-       
+		
+		new JFrame();
+		setVisible(true);
+		setBounds(10, 20, 640, 357);
+		setTitle("增加学生学籍信息");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		AddStudentPanel = new JPanel();      
                 
 		Box box = Box.createVerticalBox();
 		Box box2 = Box.createVerticalBox();
@@ -70,7 +68,7 @@ public class AddStudentView extends JFrame{
 	    box2.add(addressLabel);
 	    box2.add(majorLabel);
 	    box2.add(dormLabel); 
-	    
+	    //文本
 		box.add(newID);			
 		box.add(newName);
 		box.add(newSex);
@@ -83,7 +81,7 @@ public class AddStudentView extends JFrame{
 		AddStudentPanel.add(box2);
 		AddStudentPanel.add(box);
 		AddStudentPanel.add(addConfirmButton);
-		mainFrame.add(AddStudentPanel);      		
+		add(AddStudentPanel);      		
 	}
 	
 	private void run() {
@@ -101,7 +99,7 @@ public class AddStudentView extends JFrame{
 		          (sAge.length() != 0) && (sBirthdate.length() != 0) && 
 		          (sSex.length() != 0) && (sPlace.length() != 0) && (sDepart.length() != 0) && (sDormitory.length() != 0))
 		        {
-		          StudentRollInfo s = new StudentRollInfo("", "", "", "", "", "", "", ""/*, "", "", "", ""*/);
+		          StudentRollInfo s = new StudentRollInfo("", "", "", "", "", "", "", "");
 		          s.setId(sId);
 		          s.setName(sName);
 		          s.setGender(sSex);
@@ -110,10 +108,7 @@ public class AddStudentView extends JFrame{
 		          s.setDepartment(sDepart);
 		          s.setDormitory(sDormitory);
 		          s.setBirthPlace(sPlace);
-		          //s.setEntranceTime("");
-		          //s.setMajor("");
-		          //s.setNation("");
-		          //s.setPhoto("");
+		        
 		          boolean isSave = new IStudentImpl(AddStudentView.this.sockethelper).AddStudentView(s);
 		          if (isSave)
 		          {
@@ -134,8 +129,7 @@ public class AddStudentView extends JFrame{
 			}
 
 	protected void dialogClose() {
-		// TODO Auto-generated method stub
-		this.mainFrame.dispose();
+		this.dispose();
 	}
 	
 }

@@ -1,7 +1,6 @@
 package vc.view;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -19,26 +18,21 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import vc.common.CourseInfo;
 import vc.common.StudentRollInfo;
 import vc.helper.SocketHelper;
-import vc.sendImpl.ISelectCourseImpl;
 import vc.sendImpl.IStudentImpl;
 
 public class DeleteStudentView extends JFrame{
 
-	public JFrame mainFrame;
-	private JPanel AddStudentPanel;
+	private JPanel DeleteStudentPanel;
 	private String StudentId;
 	private SocketHelper sockethelper = new SocketHelper();
 	
 	private JButton deleteConfirmButton = new JButton("确认删除");
 	private JTextField textField_StuId = new JTextField();
-	//private Object btnDelete;
+
 	private JTable table_StuInfo = new JTable();
 	JScrollPane scrollPane_StuInfo = new JScrollPane();
-	private JButton searchButton = new JButton("删除");
-	
 
 	public DeleteStudentView(String id) {
 		StudentId = id;
@@ -50,26 +44,19 @@ public class DeleteStudentView extends JFrame{
 
 
 	private void setMainPanel() {
-		// TODO Auto-generated method stub
-		mainFrame = new JFrame();
-		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 640, 357);
-		mainFrame.setTitle("学籍信息");
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		AddStudentPanel = new JPanel();
+		new JFrame();
+		setVisible(true);
+		setBounds(10, 20, 640, 357);
+		setTitle("删除学籍信息");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		DeleteStudentPanel = new JPanel();
 		scrollPane_StuInfo = new JScrollPane();
 		scrollPane_StuInfo.setViewportView(getStudentTable());		
-		
-
-		AddStudentPanel.add(deleteConfirmButton);
-		
-		
-		//AddStudentPanel.add(deleteConfirmButton);
-		AddStudentPanel.add(scrollPane_StuInfo);
-		mainFrame.add(AddStudentPanel);     
-       
-		
+		DeleteStudentPanel.add(deleteConfirmButton);	
+		DeleteStudentPanel.add(scrollPane_StuInfo);
+		add(DeleteStudentPanel);     	
 	}
+	
 	private JTable getStudentTable() {
 
 		table_StuInfo = new JTable();
@@ -86,8 +73,8 @@ public class DeleteStudentView extends JFrame{
 
 		for (int i = 0; i < list.size(); i++)
 	    {
-	      StudentRollInfo courseList = (StudentRollInfo)list.get(i);
-	      Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getAge(), courseList.getGender(), courseList.getBirthday(), courseList.getBirthPlace(), courseList.getDepartment(), courseList.getDormitory() };
+	      StudentRollInfo studentList = (StudentRollInfo)list.get(i);
+	      Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
 	      model.addRow(rowData);
 	    }
 	    return this.table_StuInfo;
@@ -100,12 +87,11 @@ public class DeleteStudentView extends JFrame{
 	  
 	        System.out.println("删除学生信息");
 	       
-	      
 	        if (table_StuInfo.getSelectedRow() == -1) {
 	          JOptionPane.showMessageDialog(null, "还未选中任何学生");
 	          return;
 	        }
-	        StudentRollInfo stu = new StudentRollInfo("", "", "", "", "", "", "", ""/*, "", "", "", ""*/);
+	        StudentRollInfo stu = new StudentRollInfo("", "", "", "", "", "", "", "");
 	        String str = (String)DeleteStudentView.this.table_StuInfo
 	          .getValueAt(DeleteStudentView.this.table_StuInfo
 	          .getSelectedRow(), 0);
@@ -116,7 +102,6 @@ public class DeleteStudentView extends JFrame{
 	        {
 	          JOptionPane.showMessageDialog(null, "删除成功");
 	          scrollPane_StuInfo.setViewportView(getStudentTable());
-	          //DeleteStudentView.this.scrollPane_StuInfo.setViewportView(DeleteStudentView.this.getAllStuTable());
 	        }
 	        else
 	        {

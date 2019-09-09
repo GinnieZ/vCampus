@@ -1,6 +1,5 @@
 package vc.view;
 
-import java.awt.Container;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,8 +18,7 @@ import vc.sendImpl.IStudentImpl;
 
 public class ModifyStudentView extends JFrame{
 
-	public JFrame mainFrame;
-	private JPanel AddStudentPanel;
+	private JPanel MOdifyStudentPanel;
 	private String StudentId;
 	private SocketHelper sockethelper = new SocketHelper();
 	private TextField modifyID = new TextField(20);
@@ -51,13 +49,13 @@ public class ModifyStudentView extends JFrame{
 	}
 
 	private void setMainPanel() {
-		// TODO Auto-generated method stub
-		mainFrame = new JFrame();
-		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 640, 357);
-		mainFrame.setTitle("学籍信息");
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		AddStudentPanel = new JPanel();
+	
+		new JFrame();
+		setVisible(true);
+		setBounds(10, 20, 640, 357);
+		setTitle("修改学生学籍信息");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		MOdifyStudentPanel = new JPanel();
         
 		Box box = Box.createVerticalBox();
 		Box box2 = Box.createVerticalBox();
@@ -78,10 +76,10 @@ public class ModifyStudentView extends JFrame{
 		box.add(modifyMajor);
 		box.add(modifyDorm);           
 		box.add(modifyConfirmButton);
-        AddStudentPanel.add(box2);
-        AddStudentPanel.add(box);
-		AddStudentPanel.add(modifyConfirmButton);
-		mainFrame.add(AddStudentPanel);    		
+		MOdifyStudentPanel.add(box2);
+		MOdifyStudentPanel.add(box);
+		MOdifyStudentPanel.add(modifyConfirmButton);
+		add(MOdifyStudentPanel);    		
 	}	
 	
 	private void run() {
@@ -101,7 +99,7 @@ public class ModifyStudentView extends JFrame{
 	          (sAge.length() != 0) && (sBirthdate.length() != 0) && 
 	          (sSex.length() != 0) && (sPlace.length() != 0) && (sDepart.length() != 0) && (sDormitory.length() != 0))
 	        {
-	          StudentRollInfo s = new StudentRollInfo("", "", "", "", "", "", "", ""/*, "", "", "", ""*/);
+	          StudentRollInfo s = new StudentRollInfo("", "", "", "", "", "", "", "");
 	          s.setId(sId);
 	          s.setName(sName);
 	          s.setGender(sSex);
@@ -131,8 +129,7 @@ public class ModifyStudentView extends JFrame{
 	}
 
 	protected void dialogClose() {
-		// TODO Auto-generated method stub
-		this.mainFrame.dispose();
+		this.dispose();
 	}
 
 }
