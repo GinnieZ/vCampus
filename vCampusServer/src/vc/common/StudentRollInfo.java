@@ -12,14 +12,10 @@ public class StudentRollInfo
   private String gender;
   private String birthday;
   private String birthPlace;
-  private String entranceTime;
-  private String photo;
-  private String nation;
   private String department;
-  private String major;
   private String dormitory;
   
-  public StudentRollInfo(String id, String name, String age, String gender, String birthday, String birthPlace,/* String entranceTime, String photo, String nation,*/ String department, /*String major, */String dormitory)
+  public StudentRollInfo(String id, String name, String age, String gender, String birthday, String birthPlace, String department, String dormitory)
   {
     this.id = id;
     this.name = name;
@@ -27,11 +23,7 @@ public class StudentRollInfo
     this.gender = gender;
     this.birthday = birthday;
     this.birthPlace = birthPlace;
-    //this.entranceTime = entranceTime;
-   // this.photo = photo;
-    //this.nation = nation;
     this.department = department;
-    //this.major = major;
     this.dormitory = dormitory;
   }
   
@@ -95,36 +87,6 @@ public class StudentRollInfo
     this.birthPlace = birthPlace;
   }
   
-  public String getEntranceTime()
-  {
-    return this.entranceTime;
-  }
-  
-  public void setEntranceTime(String entranceTime)
-  {
-    this.entranceTime = entranceTime;
-  }
-  
-  public String getPhoto()
-  {
-    return this.photo;
-  }
-  
-  public void setPhoto(String photo)
-  {
-    this.photo = photo;
-  }
-  
-  public String getNation()
-  {
-    return this.nation;
-  }
-  
-  public void setNation(String nation)
-  {
-    this.nation = nation;
-  }
-  
   public String getDepartment()
   {
     return this.department;
@@ -133,16 +95,6 @@ public class StudentRollInfo
   public void setDepartment(String department)
   {
     this.department = department;
-  }
-  
-  public String getMajor()
-  {
-    return this.major;
-  }
-  
-  public void setMajor(String major)
-  {
-    this.major = major;
   }
   
   public String getDormitory()

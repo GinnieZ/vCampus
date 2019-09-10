@@ -774,27 +774,18 @@ public class ClientThread extends Thread implements MsgType {
 	  }
 	}
 	
-	private void Hospital(int cmd){
+	private void Hospital(int cmd) {
 		PatientInfo PInfo = null;
 		MedcineInfo MInfo = null;
 		UserInfo user = null;
 		Hospital hs = new Hospital();
 		String[] rs;
 		String[] unpaidMedcine;
-		String id = null;
-		String prescription = null;
 		//System.out.println(11);
 		if (cmd / 100 == 8) {
 			try {
-				if(cmd == 821 || cmd == 820) {
-					id = (String) this.ois.readObject();
-				}
 				if(cmd == 805) {
 					user = (UserInfo) this.ois.readObject();
-				}
-				if(cmd == 822) {
-					id = (String) this.ois.readObject();
-					prescription = (String) this.ois.readObject();
 				}
 				if (cmd == 803 || cmd == 806 || cmd == 808 || cmd == 809 || cmd == 823) {
 					//System.out.println(12);
@@ -965,38 +956,6 @@ public class ClientThread extends Thread implements MsgType {
 				try {
 					int wb = hs.addPatient_2(PInfo) ? 8111 : 8112;
 					this.oos.writeInt(wb);
-					this.oos.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case 820:
-				try {
-					rs = hs.readDay(id);
-					//hs.prescribe(id, prescription);
-					this.oos.writeObject(rs);
-					this.oos.flush();
-					this.oos.writeInt(8201);
-					this.oos.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case 821:
-				try {
-					rs = hs.readPrescription(id);
-					this.oos.writeObject(rs);
-					this.oos.flush();
-					this.oos.writeInt(8211);
-					this.oos.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case 822:
-				try {
-					hs.prescribe(id, prescription);
-					this.oos.writeInt(8221);
 					this.oos.flush();
 				} catch (IOException e) {
 					e.printStackTrace();

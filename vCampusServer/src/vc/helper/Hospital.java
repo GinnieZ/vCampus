@@ -108,23 +108,5 @@ public class Hospital {
 		  return this.pModel.searchRegister(info);
 	  }
 
-	  public boolean prescribe(String id,String prescription)
-	  {
-		  return this.pModel.prescribe(id,prescription);
-	  }
-	  
-	  public ResultSet readMHistory(String id)
-	  {
-		  return (ResultSet) this.pModel.readMHistory(id);
-	  }
-	  
-	  public String[] readDay(String id)
-	  {
-		  return (String[]) this.pModel.readPrescription(id,1);
-	  }
-	  
-	  public String[] readPrescription(String id)
-	  {
-		  return (String[]) this.pModel.readPrescription(id,2);
-	  }
+
 }

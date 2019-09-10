@@ -1,7 +1,6 @@
 package vc.view;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +23,6 @@ import vc.sendImpl.IStudentImpl;
 
 public class CheckStudentView extends JFrame{
 
-	public JFrame mainFrame;
 	private String StudentId;
 	private SocketHelper sockethelper = new SocketHelper();
 	private TextField checkID = new TextField(20);
@@ -36,13 +34,15 @@ public class CheckStudentView extends JFrame{
 	private TextField checkMajor = new TextField(20);
 	private TextField checkDorm = new TextField(20);
 	private TextField searchIDText = new TextField(50);
-	private JButton searchButton = new JButton("搜索");
-	private JButton checkConfirmButton = new JButton("确认");
+	private JButton searchButton = new JButton("  搜索  ");
+	private JButton searchAll = new JButton("查询所有");
 	private JTextField textField_StuId = new JTextField();
 	private JScrollPane scrollPane_StuInfo = new JScrollPane();
 	private JTable table_StuInfo;
 	private JFrame CheckStudentFrame;
-	 JPanel CheckStudentPanel;
+	private JPanel CheckStudentPanel;
+	private JTable table_StuInfo2 = new JTable();
+	JScrollPane scrollPane_StuInfo2 = new JScrollPane();
 	
 	public CheckStudentView(String id) {
 		StudentId = id;
@@ -53,32 +53,37 @@ public class CheckStudentView extends JFrame{
 	}
 
 	private void setMainPanel1() {
-		// TODO Auto-generated method stub
-		mainFrame = new JFrame();
-		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 640, 357);
-		mainFrame.setTitle("查找学生学籍信息");
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		new JFrame();
+		setVisible(true);
+		setBounds(10, 20, 640, 357);
+		setTitle("查找学生学籍信息");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		CheckStudentPanel = new JPanel();
+		scrollPane_StuInfo = new JScrollPane();
+		scrollPane_StuInfo.setViewportView(getStudentTable());		
+		CheckStudentPanel.add(searchButton);	
+		CheckStudentPanel.add(searchAll);
+		CheckStudentPanel.add(scrollPane_StuInfo);
+		add(CheckStudentPanel);  
 		
 		Box box = Box.createVerticalBox();
 		
 		box.add(textField_StuId); 
 		box.add(searchButton);  
-        //box.add(checkConfirmButton);
+        box.add(searchAll);
         CheckStudentPanel.add(box);
         
         CheckStudentPanel.add(scrollPane_StuInfo);
-		mainFrame.add(CheckStudentPanel);    
-		
-		
+		add(CheckStudentPanel);    
+			
 	}
 	private void run() {
-		// TODO Auto-generated method stub
+		
 		this.searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 		      {
-		        System.out.println("查找学生信息");
+		        System.out.println("按学号查找学生信息");
 		        String stuId = CheckStudentView.this.textField_StuId.getText();
 		        System.out.println(stuId);
 		        if (stuId.equals(""))
@@ -87,28 +92,60 @@ public class CheckStudentView extends JFrame{
 		          return;
 		        }
 		        scrollPane_StuInfo.setViewportView(getStuTableById(stuId));
-		       // CheckStudentView.this.scrollPane_StuInfo.setViewportView(CheckStudentView.this.getStuTableById(stuId));
+		        scrollPane_StuInfo2.setViewportView(getStudentTable());
+		      }
+		});
+		
+		this.searchAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0)
+		      {
+		        System.out.println("查找所有学生信息"); 
+		        //CheckStudentView.this.scrollPane_StuInfo.setViewportView(CheckStudentView.this.getStudentTable());
+		        scrollPane_StuInfo.setViewportView(getStudentTable());
 		      }
 		});
 	}
 
 
+	protected JTable getStudentTable() {
+
+		table_StuInfo = new JTable();
+		String[] columns = { "学生ID", "姓名", "年龄", "性别", "出生日期", "地址", "专业", "宿舍" };
+		DefaultTableModel model = new DefaultTableModel(columns, 0)
+		{
+			public boolean isCellEditable(int row, int column)
+			{
+				return false;
+			}
+		};
+		table_StuInfo.setModel(model);
+		List<StudentRollInfo> list = new IStudentImpl(this.sockethelper).EnquiryAllStu(null);
+
+		for (int i = 0; i < list.size(); i++)
+	    {
+	      StudentRollInfo studentList = (StudentRollInfo)list.get(i);
+	      Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
+	      model.addRow(rowData);
+	    }
+	    return this.table_StuInfo;
+	
+	}
+
 	protected JTable getStuTableById(String stuId) {
-		// TODO Auto-generated method stub
 		
 		this.table_StuInfo = new JTable();
 	    String[] columns = { "学生ID", "姓名", "年龄", "性别", "出生日期", "地址", "专业", "宿舍" };
 	    DefaultTableModel model = new DefaultTableModel(columns, 0);
 	    this.table_StuInfo.setModel(model);
-	    StudentRollInfo stu = new StudentRollInfo(stuId, "", "", "", "", "", "", ""/*, "", "", "", ""*/);
+	    StudentRollInfo stu = new StudentRollInfo(stuId, "", "", "", "", "", "", "");
 	    List<StudentRollInfo> list = new IStudentImpl(this.sockethelper).EnquiryStuById(stu);
 	    if (list.isEmpty())
 	    {
 	      JOptionPane.showMessageDialog(null, "查询不到学生信息");
 	      return this.table_StuInfo;
 	    }
-	    StudentRollInfo courseList = (StudentRollInfo)list.get(0);
-	    Object[] rowData = { courseList.getId(), courseList.getName(), courseList.getAge(), courseList.getGender(), courseList.getBirthday(), courseList.getBirthPlace(), courseList.getDepartment(), courseList.getDormitory() };
+	    StudentRollInfo studentList = (StudentRollInfo)list.get(0);
+	    Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
 	    model.addRow(rowData);
 	    
 	    return this.table_StuInfo;

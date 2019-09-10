@@ -1,9 +1,10 @@
 package vc.view;
 
-import java.awt.Container;
+import java.awt.Component;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,6 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import vc.common.StudentRollInfo;
 import vc.helper.SocketHelper;
@@ -19,28 +23,22 @@ import vc.sendImpl.IStudentImpl;
 
 public class ModifyStudentView extends JFrame{
 
-	public JFrame mainFrame;
-	private JPanel AddStudentPanel;
+	private JPanel MOdifyStudentPanel;
 	private String StudentId;
 	private SocketHelper sockethelper = new SocketHelper();
-	private TextField modifyID = new TextField(20);
-	private TextField modifyName = new TextField(20);
-	private TextField modifySex = new TextField(20);
-	private TextField modifyAge = new TextField(20);
-	private TextField modifyBirthDate = new TextField(20);
-	private TextField modifyAddress = new TextField(20);
-	private TextField modifyMajor = new TextField(20);
-	private TextField modifyDorm = new TextField(20);
+	private TextField modifyID = new TextField("学号");
+	private TextField modifyName = new TextField("姓名 ");
+	private TextField modifySex = new TextField("性别 ");
+	private TextField modifyAge = new TextField("年龄  ");
+	private TextField modifyBirthDate = new TextField("出生日期 ");
+	private TextField modifyAddress = new TextField("家庭住址 ");
+	private TextField modifyMajor = new TextField("专业");
+	private TextField modifyDorm = new TextField("宿舍 ");
 	private JButton modifyConfirmButton = new JButton("确认修改");
+	JScrollPane scrollPane_StuInfo = new JScrollPane();
+	private JTable table_StuInfo = new JTable();
+	private JButton refreshButton = new JButton("  刷新  ");
 	
-	JLabel IDLabel = new JLabel("学号");
-	JLabel nameLabel = new JLabel("姓名 ");
-	JLabel sexLabel = new JLabel("性别 ");
-	JLabel ageLabel = new JLabel("年龄  ");
-	JLabel birthLabel = new JLabel("出生日期 ");
-	JLabel addressLabel = new JLabel("家庭住址 ");
-	JLabel majorLabel = new JLabel("专业");
-	JLabel dormLabel = new JLabel("宿舍 ");
 	
 	public ModifyStudentView(String id) {
 		StudentId = id;
@@ -51,24 +49,21 @@ public class ModifyStudentView extends JFrame{
 	}
 
 	private void setMainPanel() {
-		// TODO Auto-generated method stub
-		mainFrame = new JFrame();
-		mainFrame.setVisible(true);
-		mainFrame.setBounds(10, 20, 640, 357);
-		mainFrame.setTitle("学籍信息");
-		mainFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		AddStudentPanel = new JPanel();
+	
+		new JFrame();
+		setVisible(true);
+		setBounds(10, 20, 640, 357);
+		setTitle("修改学生学籍信息");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		MOdifyStudentPanel = new JPanel();
+		scrollPane_StuInfo = new JScrollPane();
+		scrollPane_StuInfo.setViewportView(getStudentTable());		
+		MOdifyStudentPanel.add(modifyConfirmButton);	
+		MOdifyStudentPanel.add(scrollPane_StuInfo);
+		add(MOdifyStudentPanel);  
         
 		Box box = Box.createVerticalBox();
-		Box box2 = Box.createVerticalBox();
-		box2.add(IDLabel);
-	    box2.add(nameLabel);
-	    box2.add(sexLabel);
-	    box2.add(ageLabel);
-	    box2.add(birthLabel);
-	    box2.add(addressLabel);
-	    box2.add(majorLabel);
-	    box2.add(dormLabel);         
+		       
 		box.add(modifyID);
 		box.add(modifyName);
 		box.add(modifySex);
@@ -78,12 +73,37 @@ public class ModifyStudentView extends JFrame{
 		box.add(modifyMajor);
 		box.add(modifyDorm);           
 		box.add(modifyConfirmButton);
-        AddStudentPanel.add(box2);
-        AddStudentPanel.add(box);
-		AddStudentPanel.add(modifyConfirmButton);
-		mainFrame.add(AddStudentPanel);    		
+		box.add(refreshButton);
+		MOdifyStudentPanel.add(box);
+	
+		add(MOdifyStudentPanel);    		
 	}	
 	
+	private Component getStudentTable() {
+
+		table_StuInfo = new JTable();
+		String[] columns = { "学生ID", "姓名", "年龄", "性别", "出生日期", "地址", "专业", "宿舍" };
+		DefaultTableModel model = new DefaultTableModel(columns, 0)
+		{
+			public boolean isCellEditable(int row, int column)
+			{
+				return false;
+			}
+		};
+		table_StuInfo.setModel(model);
+		List<StudentRollInfo> list = new IStudentImpl(this.sockethelper).EnquiryAllStu(null);
+
+		for (int i = 0; i < list.size(); i++)
+	    {
+	      StudentRollInfo studentList = (StudentRollInfo)list.get(i);
+	      Object[] rowData = { studentList.getId(), studentList.getName(), studentList.getAge(), studentList.getGender(), studentList.getBirthday(), studentList.getBirthPlace(), studentList.getDepartment(), studentList.getDormitory() };
+	      model.addRow(rowData);
+	    }
+	    return this.table_StuInfo;
+	
+	
+	}
+
 	private void run() {
 		this.modifyConfirmButton.addActionListener(new ActionListener()
 	    {
@@ -101,7 +121,7 @@ public class ModifyStudentView extends JFrame{
 	          (sAge.length() != 0) && (sBirthdate.length() != 0) && 
 	          (sSex.length() != 0) && (sPlace.length() != 0) && (sDepart.length() != 0) && (sDormitory.length() != 0))
 	        {
-	          StudentRollInfo s = new StudentRollInfo("", "", "", "", "", "", "", ""/*, "", "", "", ""*/);
+	          StudentRollInfo s = new StudentRollInfo("", "", "", "", "", "", "", "");
 	          s.setId(sId);
 	          s.setName(sName);
 	          s.setGender(sSex);
@@ -127,12 +147,19 @@ public class ModifyStudentView extends JFrame{
 	          JOptionPane.showMessageDialog(null, "还有空项未输入");
 	        }
 	      }
-	    });		
+	    });	
+		this.refreshButton.addActionListener(new ActionListener()
+	    {
+	      public void actionPerformed(ActionEvent e)
+	      {
+	        ModifyStudentView.this.scrollPane_StuInfo.setViewportView(ModifyStudentView.this.getStudentTable());
+	      }
+	    });
+		scrollPane_StuInfo.setViewportView(getStudentTable());
 	}
 
 	protected void dialogClose() {
-		// TODO Auto-generated method stub
-		this.mainFrame.dispose();
+		//this.dispose();
 	}
 
 }
