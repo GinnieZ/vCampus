@@ -3,6 +3,10 @@ package vc.sendImpl;
 import vc.common.BookInfo;
 import vc.common.BookStatusInfo;
 import vc.common.MsgType;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,12 +22,15 @@ public class ILibraryAdminImpl
   SocketHelper sockethelper = new SocketHelper();
   ObjectInputStream is;
   ObjectOutputStream os;
+  DataInputStream dis;
+  FileOutputStream fos;
   
   public ILibraryAdminImpl(SocketHelper sockethelper)
   {
 	this.sockethelper = sockethelper;
     this.is = sockethelper.getIs();
     this.os = sockethelper.getOs();
+    this.dis = sockethelper.getDis();
   }
   public List EnquiryAllBook()
   {
@@ -57,7 +64,9 @@ public class ILibraryAdminImpl
   {
 	  try
 	    {
+		  
 	      BookInfo bookTemp = new BookInfo(0, "", bookName, "", "", 0, "", false);
+	      System.out.println("查阅图书："+bookTemp.getName());
 	      this.os.writeInt(401);
 	      this.os.flush();
 	      this.os.writeObject(bookTemp);
@@ -66,7 +75,23 @@ public class ILibraryAdminImpl
 	      {
 	        if (this.is.readInt() == 4011) {
 	        	System.out.println("!!!!LIBRARY_BOOK_QUERY_A_SUCCESS)");
-	            return Arrays.asList((BookInfo[])this.is.readObject());
+	        	List<BookInfo> tmpBookInfo = Arrays.asList((BookInfo[])this.is.readObject());
+	            fos = new FileOutputStream(new File("src\\vc\\images",bookName+".jpg"));
+	            byte[] inputByte = new byte[1024];
+	            int length = 0;
+	            System.out.println("开始接收数据...");
+	            //当length小于1024时停止循环
+	            while ((length = dis.read(inputByte, 0, inputByte.length)) == 1024) {
+	            	System.out.println(length);
+	                fos.write(inputByte, 0, length);
+	                fos.flush();
+	            }
+	            //接受最后的数据
+	            fos.write(inputByte, 0, length);
+	            fos.flush();
+	            System.out.println(length);
+	            return tmpBookInfo;
+
 	        }
 	      }
 	      catch (ClassNotFoundException e)
@@ -79,6 +104,16 @@ public class ILibraryAdminImpl
 	    {
 	      e.printStackTrace();
 	    }
+		  finally {
+				if(fos != null){
+	        try {
+				System.out.println("图片接收完毕");
+				fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					}           
+	        }
+			}
 	    return null;
   }
   public List EnquiryABookById(int bookId)
@@ -93,8 +128,24 @@ public class ILibraryAdminImpl
 	      try
 	      {
 	        if (this.is.readInt() == 4011) {
-	        	System.out.println("!!!!LIBRARY_BOOK_QUERY_BY_ID_SUCCESS)");
-	          return Arrays.asList((BookInfo[])this.is.readObject());
+	        	System.out.println("!!!!LIBRARY_BOOK_QUERY_A_SUCCESS)");
+	        	List<BookInfo> tmpBookInfo = Arrays.asList((BookInfo[])this.is.readObject());
+	            fos = new FileOutputStream(new File("src\\vc\\images",tmpBookInfo.get(0).getName()+".jpg"));
+	            byte[] inputByte = new byte[1024];
+	            int length = 0;
+	            System.out.println("开始接收数据...");
+	            //当length小于1024时停止循环
+	            while ((length = dis.read(inputByte, 0, inputByte.length)) == 1024) {
+	            	System.out.println(length);
+	                fos.write(inputByte, 0, length);
+	                fos.flush();
+	            }
+	            //接受最后的数据
+	            fos.write(inputByte, 0, length);
+	            fos.flush();
+	            System.out.println(length);
+	            return tmpBookInfo;
+
 	        }
 	      }
 	      catch (ClassNotFoundException e)
@@ -107,6 +158,16 @@ public class ILibraryAdminImpl
 	    {
 	      e.printStackTrace();
 	    }
+		  finally {
+				if(fos != null){
+	        try {
+				System.out.println("图片接收完毕");
+				fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					}           
+	        }
+			}
 	    return null;
   }
   public List EnquiryBookStatus(String bookName)
@@ -176,7 +237,7 @@ public class ILibraryAdminImpl
       BookInfo b = new BookInfo(id, "", "", "", "", 0, "", false);
       this.os.writeObject(b);
       this.os.flush();
-      //ɾ���ɹ�
+      //删除成功
       if (this.is.readInt() == 4031) {
     	  System.out.println("!!!!LIBRARY_BOOK_DELETE_SUCCESS)");
           return true;
