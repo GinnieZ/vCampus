@@ -2,6 +2,10 @@ package vc.sendImpl;
 
 import vc.common.BookInfo;
 import vc.common.BookStatusInfo;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,18 +20,21 @@ public class ILibraryComImpl
   SocketHelper socketHelper = new SocketHelper();
   ObjectInputStream is;
   ObjectOutputStream os;
+  DataInputStream dis;
+  FileOutputStream fos;
   String id;
   
   public ILibraryComImpl(String ComId, SocketHelper sockethelper)
   {
     this.is = sockethelper.getIs();
     this.os = sockethelper.getOs();
+    this.dis = sockethelper.getDis();
     this.id = ComId;
   }
-  //°´ÊéÃûËÑË÷Í¼Êé
+  //æŒ‰ä¹¦åæœç´¢å›¾ä¹¦
   public List EnquiryAllBook(String bookName)
   {
-  	System.out.println("ÓÃ»§:"+id+"ËÑË÷Í¼Êé£º"+bookName);
+  	System.out.println("ç”¨æˆ·:"+id+"æœç´¢å›¾ä¹¦ï¼š"+bookName);
     try
     {
       BookInfo bookTemp = new BookInfo(0, "", bookName, "", "", 0, "", false);
@@ -37,15 +44,40 @@ public class ILibraryComImpl
       this.os.flush();
       try
       {
-    	//ËÑË÷³É¹¦
+    	//æœç´¢æˆåŠŸ
         if (this.is.readInt() == 4011) {
-            return Arrays.asList((BookInfo[])this.is.readObject());
+        	List<BookInfo> tmpBookInfo = Arrays.asList((BookInfo[])this.is.readObject());
+            fos = new FileOutputStream(new File("src\\vc\\images",bookName+".jpg"));
+            byte[] inputByte = new byte[1024];
+            int length = 0;
+            System.out.println("å¼€å§‹æ¥æ”¶æ•°æ®...");
+            //å½“lengthå°äº1024æ—¶åœæ­¢å¾ªç¯
+            while ((length = dis.read(inputByte, 0, inputByte.length)) == 1024) {
+            	System.out.println(length);
+                fos.write(inputByte, 0, length);
+                fos.flush();
+            }
+            //æ¥å—æœ€åçš„æ•°æ®
+            fos.write(inputByte, 0, length);
+            fos.flush();
+            System.out.println(length);
+            return tmpBookInfo;
         }
       }
       catch (ClassNotFoundException e)
       {
         e.printStackTrace();
       }
+      finally {
+			if(fos != null){
+          try {
+  			System.out.println("å›¾ç‰‡æ¥æ”¶å®Œæ¯•");
+  			fos.close();
+  			} catch (IOException e) {
+  				e.printStackTrace();
+  				}           
+          }
+		}
       return null;
     }
     catch (IOException e)
@@ -54,10 +86,10 @@ public class ILibraryComImpl
     }
     return null;
   }
-  //½èÔÄÍ¼Êé
+  //å€Ÿé˜…å›¾ä¹¦
   public boolean BorrowBook(int bookId, String bookName, long borrowDate, long returnDate)
   {
-	  System.out.println("ÓÃ»§:"+id+"½èÔÄÍ¼Êé£ºÊéºÅ£º"+bookId);
+	  System.out.println("ç”¨æˆ·:"+id+"å€Ÿé˜…å›¾ä¹¦ï¼šä¹¦å·ï¼š"+bookId);
     try
     {
       BookStatusInfo bookStatusTemp = new BookStatusInfo(bookId, bookName, id, borrowDate, returnDate, 0, false);
@@ -65,7 +97,7 @@ public class ILibraryComImpl
       this.os.flush();
       this.os.writeObject(bookStatusTemp);
       this.os.flush();
-      //³É¹¦½èÔÄ
+      //æˆåŠŸå€Ÿé˜…
       if (this.is.readInt() == 4111) {
         return true;
       }
@@ -76,10 +108,10 @@ public class ILibraryComImpl
     }
     return false;
   }
-  //°´ÓÃ»§id²éÔÄ½èÔÄ¼ÇÂ¼
+  //æŒ‰ç”¨æˆ·idæŸ¥é˜…å€Ÿé˜…è®°å½•
   public List EnquiryRecord(String userId)
   {
-	System.out.println("ÓÃ»§:"+id+"²éÔÄ½èÔÄ¼ÇÂ¼");
+	System.out.println("ç”¨æˆ·:"+id+"æŸ¥é˜…å€Ÿé˜…è®°å½•");
     try
     {
       BookStatusInfo bookStatusTemp = new BookStatusInfo(0, "", userId, 0, 0, 0, false);
@@ -89,7 +121,7 @@ public class ILibraryComImpl
       this.os.flush();
       try
       {
-    	//²éÑ¯³É¹¦
+    	//æŸ¥è¯¢æˆåŠŸ
         if (this.is.readInt() == 4131) {
           return Arrays.asList((BookStatusInfo[])this.is.readObject());
         }
@@ -106,10 +138,10 @@ public class ILibraryComImpl
     }
     return null;
   }
-  //¹é»¹Í¼Êé£¬´«ÈëÍêÕûÍ¼Êé×´Ì¬ĞÅÏ¢
+  //å½’è¿˜å›¾ä¹¦ï¼Œä¼ å…¥å®Œæ•´å›¾ä¹¦çŠ¶æ€ä¿¡æ¯
   public boolean ReturnBook(int bookId, String bookName,long borrowDate,long returnDate, long actualReturnDate)
   {
-	System.out.println("ÓÃ»§:"+id+"¹é»¹Í¼Êé£º"+bookId+" "+bookName+" "+id+" "+borrowDate+" "+returnDate+" "+actualReturnDate);
+	System.out.println("ç”¨æˆ·:"+id+"å½’è¿˜å›¾ä¹¦ï¼š"+bookId+" "+bookName+" "+id+" "+borrowDate+" "+returnDate+" "+actualReturnDate);
     try
     {
       BookStatusInfo bookStatusTemp;
