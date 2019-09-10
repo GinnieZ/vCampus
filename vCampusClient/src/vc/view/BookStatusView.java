@@ -42,7 +42,7 @@ public class BookStatusView extends JFrame {
 	private SocketHelper sockethelper = new SocketHelper();
 	private List<BookStatusInfo> statusList;
 	
-	////ĞŞ¸ÄºóµÄÍ¼ÊéĞÅÏ¢
+	////ä¿®æ”¹åçš„å›¾ä¹¦ä¿¡æ¯
 	public int bookId;
 	public String name;
 	public String borrower;
@@ -59,31 +59,33 @@ public class BookStatusView extends JFrame {
 		this.myLibraryAdminView = tmpLibraryAdminView;
 		sockethelper.getConnection();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 712, 524);
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblTitle = new JLabel("Í¼Êé×´Ì¬²éÑ¯½á¹û");
+		JLabel lblTitle = new JLabel("å›¾ä¹¦çŠ¶æ€æŸ¥è¯¢ç»“æœ");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 28));
+		lblTitle.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 28));
 		lblTitle.setBounds(201, 13, 232, 47);
 		contentPane.add(lblTitle);
 				                
-		////////////±í¸ñµÄ´´½¨Óë³õÊ¼»¯////////////
+		////////////è¡¨æ ¼çš„åˆ›å»ºä¸åˆå§‹åŒ–////////////
 		////////
 		/* 
-         * * ÉèÖÃJTableµÄÁĞÃû 
+         * * è®¾ç½®JTableçš„åˆ—å 
          */  
         String[] columnNames =  
-        { "ÊéºÅ", "ÊéÃû", "½èÔÄÕßID","Ê±¼ä","Ó¦»¹Ê±¼ä","Êµ¼Ê¹é»¹Ê±¼ä"};  
+        { "ä¹¦å·", "ä¹¦å", "å€Ÿé˜…è€…ID","æ—¶é—´","åº”è¿˜æ—¶é—´","å®é™…å½’è¿˜æ—¶é—´"};  
   
         
         tblStatus = new JTable();
+        tblStatus.setFont(new Font("å¾®è½¯é›…é»‘ Light", Font.PLAIN, 18));
 		tblStatus.setColumnSelectionAllowed(true);
-		tblStatus.setForeground(SystemColor.activeCaption);
+		tblStatus.setForeground(new Color(0, 51, 102));
 		tblStatus.setBounds(105, 250, 250, 140);
 		
 		model = new DefaultTableModel(columnNames, 0);
@@ -97,7 +99,7 @@ public class BookStatusView extends JFrame {
 			if(bookStatusTemp.getActualReturnDate()==0)
 			{
 				Object[] rowData = { String.valueOf(bookStatusTemp.getId()), bookStatusTemp.getName(),  bookStatusTemp.getBorrower(), String.valueOf(bookStatusTemp.getBorrowDate()), 
-						String.valueOf(bookStatusTemp.getReturnDate()), "Î´¹é»¹"};
+						String.valueOf(bookStatusTemp.getReturnDate()), "æœªå½’è¿˜"};
 				model.addRow(rowData);
 			}
 			else
@@ -108,36 +110,44 @@ public class BookStatusView extends JFrame {
 			}
 		}
 		tblStatus.setModel(model);
+		tblStatus.setRowHeight(25);
+		tblStatus.getColumnModel().getColumn(0).setPreferredWidth(60);
+		tblStatus.getColumnModel().getColumn(1).setPreferredWidth(200);
+		tblStatus.getColumnModel().getColumn(2).setPreferredWidth(100);
+		tblStatus.getColumnModel().getColumn(3).setPreferredWidth(100);
+		tblStatus.getColumnModel().getColumn(4).setPreferredWidth(100);
+		tblStatus.getColumnModel().getColumn(5).setPreferredWidth(100);
+		tblStatus.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
 		scrollStatus = new JScrollPane(tblStatus);  
 		scrollStatus.setBounds(94, 73, 484, 303);
-		scrollStatus.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //ÉèÖÃË®Æ½¹ö¶¯ÌõĞèÒªÊ±¿É¼û
+		scrollStatus.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //è®¾ç½®æ°´å¹³æ»šåŠ¨æ¡éœ€è¦æ—¶å¯è§
 	    getContentPane().add(scrollStatus);
 		contentPane.add(scrollStatus);
 		
-		////////////°´¼üµÄ³õÊ¼»¯////////////
-		JButton btnModify = new JButton("ĞŞ¸Ä");
-		btnModify.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
+		////////////æŒ‰é”®çš„åˆå§‹åŒ–////////////
+		JButton btnModify = new JButton("ä¿®æ”¹");
+		btnModify.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
 		btnModify.setBounds(475, 389, 84, 30);
 		contentPane.add(btnModify);
 		
-		btnReturn = new JButton("·µ»Ø");
-		btnReturn.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
+		btnReturn = new JButton("è¿”å›");
+		btnReturn.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
 		btnReturn.setBackground(SystemColor.inactiveCaption);
 		btnReturn.setBounds(596, 389, 84, 30);
 		contentPane.add(btnReturn);
 		
-		////////////°´¼ü¼àÌı////////////
+		////////////æŒ‰é”®ç›‘å¬////////////
 		
-		//ĞŞ¸Ä
+		//ä¿®æ”¹
 		btnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Ñ¡ÖĞÄ³Ìõ¼ÇÂ¼£¬¿ªÊ¼ĞŞ¸Ä
+				//é€‰ä¸­æŸæ¡è®°å½•ï¼Œå¼€å§‹ä¿®æ”¹
 				int checkedRow = tblStatus.getSelectedRow();
 				if(tblStatus.getCellEditor()!=null)
-					tblStatus.getCellEditor().stopCellEditing();//Ç¿ÖÆJTable½áÊø±à¼­×´Ì¬
+					tblStatus.getCellEditor().stopCellEditing();//å¼ºåˆ¶JTableç»“æŸç¼–è¾‘çŠ¶æ€
 				if (checkedRow == -1)
 				{
-				     JOptionPane.showMessageDialog(null, "ÇëÑ¡ÖĞĞèÒªĞŞ¸ÄµÄÍ¼Êé£¡");
+				     JOptionPane.showMessageDialog(null, "è¯·é€‰ä¸­éœ€è¦ä¿®æ”¹çš„å›¾ä¹¦ï¼");
 				     return;
 				 }
 				bookId = Integer.parseInt(((String)tblStatus.getValueAt(checkedRow,0)));
@@ -145,7 +155,7 @@ public class BookStatusView extends JFrame {
 				borrower = (String) tblStatus.getValueAt(checkedRow,2);
 				borrowDate = Long.parseLong(((String) tblStatus.getValueAt(checkedRow,3)));
 				returnDate = Long.parseLong(((String) tblStatus.getValueAt(checkedRow,4)));
-				if(((String) tblStatus.getValueAt(checkedRow,5)).equals("Î´¹é»¹"))
+				if(((String) tblStatus.getValueAt(checkedRow,5)).equals("æœªå½’è¿˜"))
 				{
 					actualReturnDate = 0;
 				}
@@ -162,20 +172,21 @@ public class BookStatusView extends JFrame {
 				{
 					isOvertime = false;
 				}
-				Object[] options ={ "È·¶¨", "È¡Ïû" };  
-				int isOk = JOptionPane.showOptionDialog(null, "È·¶¨ĞŞ¸ÄÂğ", "±êÌâ",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
+				Object[] options ={ "ç¡®å®š", "å–æ¶ˆ" };  
+				int isOk = JOptionPane.showOptionDialog(null, "ç¡®å®šä¿®æ”¹å—", "æ ‡é¢˜",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
 				if(isOk==0)
 				{
 					boolean isModify = new ILibraryAdminImpl(sockethelper).modifyBookStatus(bookId, name, borrower, borrowDate, returnDate, actualReturnDate, isOvertime);
-					if(isModify)
-						JOptionPane.showMessageDialog(null, "ĞŞ¸ÄÍ¼Êé³É¹¦£¡");
-					else
-						JOptionPane.showMessageDialog(null, "ĞŞ¸ÄÍ¼ÊéÊ§°Ü£¡");
+					//å–æ¶ˆæˆåŠŸæç¤º
+//					if(isModify)
+//						JOptionPane.showMessageDialog(null, "ä¿®æ”¹å›¾ä¹¦æˆåŠŸï¼");
+					if(!isModify)
+						JOptionPane.showMessageDialog(null, "ä¿®æ”¹å›¾ä¹¦å¤±è´¥ï¼");
 				}
 			}
 		});
 
-		//·µ»Ø
+		//è¿”å›
 		btnReturn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();
@@ -183,7 +194,7 @@ public class BookStatusView extends JFrame {
 		});
 
 		
-		//¹Ø±ÕÊÂ¼şµÄ¼àÌı
+		//å…³é—­äº‹ä»¶çš„ç›‘å¬
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 			super.windowClosing(e);
@@ -191,7 +202,7 @@ public class BookStatusView extends JFrame {
 			 }
 			}); 		
 	}
-	//¹Ø±Õ´°¿Ú
+	//å…³é—­çª—å£
 	public void close()
 	{
 		myLibraryAdminView.refresh();
