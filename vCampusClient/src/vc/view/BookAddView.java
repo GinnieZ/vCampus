@@ -39,7 +39,7 @@ public class BookAddView extends JFrame {
 	private LibraryAdminView myLibraryAdminView = new LibraryAdminView("");
 	private  JTable tblBookInfo;
 
-	////ĞÂÔöµÄÍ¼ÊéĞÅÏ¢
+	////æ–°å¢çš„å›¾ä¹¦ä¿¡æ¯
 	protected String name;
 	protected String isbn;
 	protected String author;
@@ -57,40 +57,41 @@ public class BookAddView extends JFrame {
 		this.myLibraryAdminView = tmpLibraryAdminView;
 		sockethelper.getConnection();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 625, 516);
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblTitle = new JLabel("Ôö¼ÓÍ¼Êé");
+		JLabel lblTitle = new JLabel("å¢åŠ å›¾ä¹¦");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 28));
+		lblTitle.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 28));
 		lblTitle.setBounds(196, 13, 194, 47);
 		contentPane.add(lblTitle);
 		
-		////////////±í¸ñµÄ´´½¨Óë³õÊ¼»¯////////////       
+		////////////è¡¨æ ¼çš„åˆ›å»ºä¸åˆå§‹åŒ–////////////       
         tblBookInfo = new JTable(7,2);
         
-        tblBookInfo.setFont(new Font("Î¢ÈíÑÅºÚ Light", Font.PLAIN, 16));
+        tblBookInfo.setFont(new Font("å¾®è½¯é›…é»‘ Light", Font.PLAIN, 18));
 		tblBookInfo.setColumnSelectionAllowed(true);
 		tblBookInfo.setForeground(Color.DARK_GRAY);
-		tblBookInfo.setSelectionBackground(Color.LIGHT_GRAY);     // Ñ¡ÖĞºó×ÖÌå±³¾°
-		tblBookInfo.setGridColor(Color.GRAY);                     // Íø¸ñÑÕÉ«
+		tblBookInfo.setSelectionBackground(Color.LIGHT_GRAY);     // é€‰ä¸­åå­—ä½“èƒŒæ™¯
+		tblBookInfo.setGridColor(Color.GRAY);                     // ç½‘æ ¼é¢œè‰²
 		tblBookInfo.setBounds(105, 250, 250, 140);
 		tblBookInfo.setRowHeight(30);
 
-		// µÚÒ»ÁĞÁĞ¿íÉèÖÃÎª80£¬µÚ¶şÁĞÁĞ¿íÉèÖÃÎª320
+		// ç¬¬ä¸€åˆ—åˆ—å®½è®¾ç½®ä¸º80ï¼Œç¬¬äºŒåˆ—åˆ—å®½è®¾ç½®ä¸º320
 		tblBookInfo.getColumnModel().getColumn(0).setPreferredWidth(80);
 		tblBookInfo.getColumnModel().getColumn(1).setPreferredWidth(320);
-		tblBookInfo.setValueAt("ÊéÃû", 0, 0);
+		tblBookInfo.setValueAt("ä¹¦å", 0, 0);
 		tblBookInfo.setValueAt("ISBN", 1, 0);
-		tblBookInfo.setValueAt("×÷Õß", 2, 0);
-		tblBookInfo.setValueAt("³ö°æÉç", 3, 0);
-		tblBookInfo.setValueAt("³ö°æÈÕÆÚ", 4, 0);
-		tblBookInfo.setValueAt("¹İ²Ø", 5, 0);
-		tblBookInfo.setValueAt("Êé¼®ÊıÁ¿", 6, 0);
+		tblBookInfo.setValueAt("ä½œè€…", 2, 0);
+		tblBookInfo.setValueAt("å‡ºç‰ˆç¤¾", 3, 0);
+		tblBookInfo.setValueAt("å‡ºç‰ˆæ—¥æœŸ", 4, 0);
+		tblBookInfo.setValueAt("é¦†è—", 5, 0);
+		tblBookInfo.setValueAt("ä¹¦ç±æ•°é‡", 6, 0);
 		tblBookInfo.setValueAt("", 0, 1);
 		tblBookInfo.setValueAt("", 1, 1);
 		tblBookInfo.setValueAt("", 2, 1);
@@ -98,7 +99,7 @@ public class BookAddView extends JFrame {
 		tblBookInfo.setValueAt("", 4, 1);
 		tblBookInfo.setValueAt("", 5, 1);
 		tblBookInfo.setValueAt("", 6, 1);
-		//Òş²Ø±íÍ·£ºÎª±íÍ·ÉèÖÃÒ»¸ö CellRenderer, Õâ¸ö CellRenderer µÄÔ¤Ñ¡¸ß¶ÈÎª 0
+		//éšè—è¡¨å¤´ï¼šä¸ºè¡¨å¤´è®¾ç½®ä¸€ä¸ª CellRenderer, è¿™ä¸ª CellRenderer çš„é¢„é€‰é«˜åº¦ä¸º 0
 		tblBookInfo.getTableHeader().setVisible(false);
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
 		renderer.setPreferredSize(new Dimension(0, 0));
@@ -109,42 +110,43 @@ public class BookAddView extends JFrame {
 		JScrollPane scrollBookInfo = new JScrollPane(tblBookInfo);  
 		scrollBookInfo.setBounds(113, 73, 368, 275);				
 		
-		scrollBookInfo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //ÉèÖÃË®Æ½¹ö¶¯ÌõĞèÒªÊ±¿É¼û
+		scrollBookInfo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //è®¾ç½®æ°´å¹³æ»šåŠ¨æ¡éœ€è¦æ—¶å¯è§
 	    getContentPane().add(scrollBookInfo);
 		contentPane.add(scrollBookInfo);
 		
-		////////////°´¼üµÄ³õÊ¼»¯////////////		
-		JButton btnSubmit = new JButton("Ìá½»");		
-		btnSubmit.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
+		////////////æŒ‰é”®çš„åˆå§‹åŒ–////////////		
+		JButton btnSubmit = new JButton("æäº¤");		
+		btnSubmit.setBackground(new Color(255, 182, 193));
+		btnSubmit.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
 		btnSubmit.setBounds(385, 381, 84, 30);
 		contentPane.add(btnSubmit);
 		
-		JButton btnReturn = new JButton("·µ»Ø");		
-		btnReturn.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnReturn.setBackground(SystemColor.inactiveCaption);
+		JButton btnReturn = new JButton("è¿”å›");		
+		btnReturn.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnReturn.setBackground(new Color(95, 158, 160));
 		btnReturn.setBounds(496, 381, 84, 30);
 		contentPane.add(btnReturn);
 		
-		////////////°´¼ü¼àÌı////////////
+		////////////æŒ‰é”®ç›‘å¬////////////
 		
-		//·µ»Ø
+		//è¿”å›
 		btnReturn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();
 			}
 		});
 		
-		//Ìá½»
+		//æäº¤
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(tblBookInfo.getCellEditor()!=null)
-					tblBookInfo.getCellEditor().stopCellEditing();//Ç¿ÖÆJTable½áÊø±à¼­×´Ì¬
+					tblBookInfo.getCellEditor().stopCellEditing();//å¼ºåˆ¶JTableç»“æŸç¼–è¾‘çŠ¶æ€
 				
 				if((tblBookInfo.getValueAt(0,1).equals(""))||(tblBookInfo.getValueAt(1,1).equals(""))||(tblBookInfo.getValueAt(2,1).equals(""))
 						||(tblBookInfo.getValueAt(3,1).equals(""))||(tblBookInfo.getValueAt(4,1).equals(""))||(tblBookInfo.getValueAt(5,1).equals(""))
 						||(tblBookInfo.getValueAt(6,1).equals("")))
 				{
-					JOptionPane.showMessageDialog(null, "ÓĞ¿Õ°×ĞÅÏ¢£¬Çë½«ĞÅÏ¢ÌîĞ´ÍêÕû£¡");
+					JOptionPane.showMessageDialog(null, "æœ‰ç©ºç™½ä¿¡æ¯ï¼Œè¯·å°†ä¿¡æ¯å¡«å†™å®Œæ•´ï¼");
 				}
 				else
 				{
@@ -157,26 +159,27 @@ public class BookAddView extends JFrame {
 					bookNum = Integer.parseInt(((String)tblBookInfo.getValueAt(6,1)));
 					if((bookNum!=0))
 					{
-						Object[] options ={ "È·¶¨", "È¡Ïû" };  
-						int isOk = JOptionPane.showOptionDialog(null, "È·¶¨Ìá½»Âğ", "±êÌâ",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
+						Object[] options ={ "ç¡®å®š", "å–æ¶ˆ" };  
+						int isOk = JOptionPane.showOptionDialog(null, "ç¡®å®šæäº¤å—", "æ ‡é¢˜",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]); 
 						if(isOk==0)
 						{
 							boolean isAdd = new ILibraryAdminImpl(sockethelper).addBook(name, isbn, author, pub, pubDate, pos, bookNum);
+							//å–æ¶ˆæˆåŠŸæç¤º
+//							if(isAdd)
+//								JOptionPane.showMessageDialog(null, "æ–°å¢å›¾ä¹¦æˆåŠŸï¼");
 							if(isAdd)
-								JOptionPane.showMessageDialog(null, "ĞÂÔöÍ¼Êé³É¹¦£¡");
-							else
-								JOptionPane.showMessageDialog(null, "ĞÂÔöÍ¼ÊéÊ§°Ü£¡");
+								JOptionPane.showMessageDialog(null, "æ–°å¢å›¾ä¹¦å¤±è´¥ï¼");
 						}
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null, "Í¼ÊéÊıÁ¿²»ÄÜÎª0£¡");
+						JOptionPane.showMessageDialog(null, "å›¾ä¹¦æ•°é‡ä¸èƒ½ä¸º0ï¼");
 					}
 				}
 				
 			}
 		});
-		//¹Ø±ÕÊÂ¼şµÄ¼àÌı
+		//å…³é—­äº‹ä»¶çš„ç›‘å¬
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 			super.windowClosing(e);
@@ -184,7 +187,7 @@ public class BookAddView extends JFrame {
 			 }
 			}); 
 	}
-	//¹Ø±Õ´°¿Ú
+	//å…³é—­çª—å£
 	public void close()
 	{
 		myLibraryAdminView.refresh();
