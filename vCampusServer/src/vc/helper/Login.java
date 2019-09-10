@@ -52,7 +52,7 @@ public class Login
 //      e.printStackTrace();
 //    }
 //	  StudentRollInfo temp = new StudentRollInfo(info.getStuId(), info.getName(), null, null, null, null, null, null, null, null, null, null);
-	  return this.model.insert(info);
+	  return true;
 	  
   }
 }

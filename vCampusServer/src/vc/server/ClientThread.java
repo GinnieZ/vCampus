@@ -814,7 +814,7 @@ public class ClientThread extends Thread implements MsgType {
 			/*
 			case 801:
 				try {
-					//不知道801干嘛的
+					//涓嶇煡閬�801骞插槢鐨�
 					PatientInfo[] result = hs.queryCourse();
 					if (result != null) {
 						this.oos.writeInt(8011);
@@ -904,7 +904,7 @@ public class ClientThread extends Thread implements MsgType {
 					rs = (String[])hs.getPatientInfo(PInfo);
 					//System.out.println(14);
 					//System.out.println(unpaidMedcine[0]);
-					//System.out.println("长度："+unpaidMedcine.length);
+					//System.out.println("闀垮害锛�"+unpaidMedcine.length);
 					PInfo.setName(rs[0]);
 					PInfo.setGender(rs[1]);
 					PInfo.setAge(Integer.parseInt(rs[2]));
@@ -926,7 +926,7 @@ public class ClientThread extends Thread implements MsgType {
 			case 808:
 				try {
 					//System.out.println(11);
-					//好像没有用到
+					//濂藉儚娌℃湁鐢ㄥ埌
 					rs = (String[])hs.getPatientInfo(PInfo);
 					unpaidMedcine = hs.searchUnpaidMedcine(PInfo);
 					PInfo.setName(rs[0]);
@@ -1013,7 +1013,7 @@ public class ClientThread extends Thread implements MsgType {
 				break;
 			}
 		} else {
-			System.out.println("未知指令");
+			System.out.println("鏈煡鎸囦护");
 		}
 	}
 	

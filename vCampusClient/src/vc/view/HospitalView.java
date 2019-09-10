@@ -16,6 +16,7 @@ import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -72,7 +73,7 @@ public class HospitalView extends JFrame {
 		newIHospitalimpl = new IHospitalimpl(StudentId, this.sockethelper);
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -140,6 +141,23 @@ public class HospitalView extends JFrame {
 		
 		//²¡Ê·
 		JButton Button_3 = new JButton("\u75C5\u53F2");
+		Button_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				 //System.exit(0);
+				MHistory ms;
+				try {
+					ms = new MHistory(StudentId);
+					ms.setVisible(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				dispose(); 
+				
+			}
+		});
 		Button_3.setBounds(256, 124, 93, 23);
 		contentPane.add(Button_3);
 		
@@ -177,7 +195,7 @@ public class HospitalView extends JFrame {
 	public void connected() throws ClassNotFoundException {
 		//user.setStuId(StudentId);
 		patient = newIHospitalimpl.getUserInfo(user);
-		newIHospitalimpl.addPatient(patient);
+		//newIHospitalimpl.addPatient(patient);
 		//register = patient.getRegister();
 		//patient.setGender("Å®");
 		//newIHospitalimpl.register(patient,register);

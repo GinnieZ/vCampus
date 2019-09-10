@@ -27,7 +27,7 @@ public class Hospital {
 	      Vector<PatientInfo> v = new Vector();
 	      while (rs.next())
 	      {
-	    	  //下面这个逻辑还没有理清
+	    	  //涓嬮潰杩欎釜閫昏緫杩樻病鏈夌悊娓�
 	        PatientInfo temp = new PatientInfo(rs.getString("id"), ((PatientInfo) rs).getUserInfo(), rs.getInt("register"), rs.getInt("age"), rs.getString("gender"), 
 	        		((PatientInfo)rs).getUnpaidMedcine(), rs.getString("Classify"));
 	        v.add(temp);
@@ -78,7 +78,7 @@ public class Hospital {
 	    return this.mModel.purchase(info);
 	  }
 	  
-	  //后期要改
+	  //鍚庢湡瑕佹敼
 	  public boolean pay(PatientInfo info)
 	  {
 		info.setUnpaidMedcine(null);

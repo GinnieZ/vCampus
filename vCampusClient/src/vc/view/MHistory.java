@@ -64,7 +64,8 @@ public class MHistory extends JFrame {
 		
 		String[] day = newIHospitalimpl.readMDay(StudentId);
 		String[] mhis = newIHospitalimpl.readMHistory(StudentId);
-
+		
+		System.out.println(day);
 		n = day.length;
 		//DefaultTableModel model=new DefaultTableModel(data, columns);
 		String[][] content = new String[n][2];
@@ -89,7 +90,7 @@ public class MHistory extends JFrame {
 		//table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		table.setBounds(37, 79, 536, 200);
 		table.setRowHeight(25);
-		//ï¿½ï¿½ï¿½ï¿½
+		//¾ÓÖÐ
 		DefaultTableCellRenderer r =new DefaultTableCellRenderer();   
 		r.setHorizontalAlignment(JLabel.CENTER);   
 		table.setDefaultRenderer(Object.class,   r);
@@ -97,7 +98,7 @@ public class MHistory extends JFrame {
 		JScrollPane scrollBookInfo = new JScrollPane(table);
 		scrollBookInfo.setBounds(113, 73, 388, 275);				
 		
-		scrollBookInfo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //ï¿½ï¿½ï¿½ï¿½Ë®Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿É¼ï¿½
+		scrollBookInfo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //ÉèÖÃË®Æ½¹ö¶¯Ìõ×ÜÊÇ¿É¼û
 	    	getContentPane().add(scrollBookInfo);
 		contentPane.add(scrollBookInfo);
 

@@ -35,7 +35,7 @@ public class PatientModel implements Model{
 	    {
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
-	        ("insert into tbRegister (registerDate, register, u_ID, u_Name, u_Gender) values ('" + date + "','" + this.info.getRegister() + "','" + this.info.getId() + "','" + this.info.getName() + "','" + this.info.getGender() + "');");
+	        ("insert into tbRegister (registerDate, register, u_ID, u_Name, u_Gender, prescription) values ('" + date.toString() + " 00:00:00.000000' ,'" + this.info.getRegister() + "','" + this.info.getId() + "','" + this.info.getName() + "','" + this.info.getGender() + "','y" + "');");
 	      System.out.println(this.query);
 	      if (stmt.executeUpdate(this.query) != 0) {
 	        return true;
@@ -54,7 +54,7 @@ public class PatientModel implements Model{
 	    {
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
-		  	        ("delete from tbPatient where u_ID='" + this.info.getId() + "';");
+		  	        ("delete from tbPatient where u_ID ='" + this.info.getId() + "';");
 	      stmt.executeUpdate(this.query);
 	      this.query = 
 	        ("insert into tbPatient values ('" + this.info.getId() + "','" + "','" + "','" + this.info.getName() + "','" + this.info.getGender() + "','" + this.info.getAge() + "','" + "');");
@@ -75,10 +75,10 @@ public class PatientModel implements Model{
 		this.info = ((PatientInfo)obj);
 	    try
 	    {
-	      //目前只能修改u_UnpaidMedcine
+	      //鐩墠鍙兘淇敼u_UnpaidMedcine
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
-	  	        ("delete from tbMedcineSelected where selector='" + this.info.getId() + "';");
+	  	        ("delete from tbMedcineSelected where selector ='" + this.info.getId() + "';");
 	      System.out.println(this.query);
 	      stmt.executeUpdate(this.query);
 	      String[] medcine =  this.info.getUnpaidMedcine_2();
@@ -106,7 +106,7 @@ public class PatientModel implements Model{
 	    {
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
-	        ("delete from tbRegister where register='" + this.info.getRegister() + "',u_ID='" + this.info.getId() + "';");
+	        ("delete from tbRegister where register ='" + this.info.getRegister() + "',u_ID='" + this.info.getId() + "';");
 	      System.out.println(this.query);
 	      if (stmt.executeUpdate(this.query) != 0) {
 	        return true;
@@ -125,7 +125,7 @@ public class PatientModel implements Model{
 	    {
 	      Statement stmt = this.con.createStatement();
 	      this.query = 
-		  	        ("delete from tbMedcineSelected where selector='" + this.info.getId() + "';");
+		  	        ("delete from tbMedcineSelected where selector ='" + this.info.getId() + "';");
 	      System.out.println(this.query);
 	      if (stmt.executeUpdate(this.query) != 0) {
 	        return true;
@@ -143,9 +143,9 @@ public class PatientModel implements Model{
 	public String[] search(Object obj) {
 	    this.info = ((PatientInfo)obj);
 	    if (!this.info.getId().equals("")) {
-	      this.query = ("select * from tbPatient where u_ID='" + this.info.getId() + "';");
+	      this.query = ("select * from tbPatient where u_ID ='" + this.info.getId() + "';");
 	    } else if (!this.info.getName().equals("")) {
-	      this.query = ("select * from tbPatient where u_Name='" + this.info.getName() + "';");
+	      this.query = ("select * from tbPatient where u_Name ='" + this.info.getName() + "';");
 	    }
 	    try
 	    {
@@ -180,10 +180,10 @@ public class PatientModel implements Model{
 	    if (this.info == null) {
 	      this.query = "select * from tbMedcineSelected;";
 	    } else if (!this.info.getId().equals("")) {
-	      this.query = ("select * from tbMedcineSelected where selector='" + this.info.getId() + "';");
+	      this.query = ("select * from tbMedcineSelected where selector ='" + this.info.getId() + "';");
 	    } else if (!this.info.getName().equals("")) {
-	      this.query = ("select * from tbMedcineSelected where u_Name='" + this.info.getName() + "';");
-	      System.out.println("searchUnpaidMedcine错啦！！！");
+	      this.query = ("select * from tbMedcineSelected where u_Name ='" + this.info.getName() + "';");
+	      System.out.println("searchUnpaidMedcine閿欏暒锛侊紒锛�");
 	    }
 	    try
 	    {
@@ -221,14 +221,35 @@ public class PatientModel implements Model{
 	public int searchRegister(Object obj) {
 		this.info = ((PatientInfo)obj);
 		int nrow = 1;
+		System.out.println(date);
+		/*
 	    try
 	    {
 	      Statement stmt = this.con.createStatement();
-	      this.query = ("select * from tbRegister where registerDate='" + date + "';");	      
+	      this.query = ("select * from tbRegister where u_ID ='09017408" + "';");	    
+	      System.out.println(this.query);
+	      ResultSet rs = stmt.executeQuery(this.query);
+	      while(rs.next()){
+	    	  System.out.println(rs.getString("registerDate"));
+	      }
+	      return nrow;
+	    }
+	    catch (SQLException e)
+	    {
+	      e.printStackTrace();
+	    }
+	    */
+		
+		
+	    try
+	    {
+	      Statement stmt = this.con.createStatement();
+	      
+	      this.query = ("select * from tbRegister where registerDate ='" + date + " 00:00:00.000000';");	      
 	      System.out.println(this.query);
 	      ResultSet rs = stmt.executeQuery(this.query);
 	      if (rs != null) {
-	    	rs.beforeFirst();//将结果集指针指回到开始位置，这样才能通过while获取rs中的数据
+	    	
 	    	while(rs.next()){
 	    	   nrow++;
 	    	}
@@ -251,7 +272,7 @@ public class PatientModel implements Model{
 	    try
 	    {
 	      Statement stmt = this.con.createStatement();
-	      this.query = ("select * from tbStudentRoll where ID='" + this.user.getStuId() + "';");
+	      this.query = ("select * from tbStudentRoll where ID ='" + this.user.getStuId() + "';");
 	      System.out.println(this.query);
 	      
 	      ResultSet rs = stmt.executeQuery(this.query);
@@ -283,7 +304,7 @@ public class PatientModel implements Model{
 		try
 	    {
 	      Statement stmt = this.con.createStatement();
-	      this.query = ("update tbRegister set prescription='" + prescription + "' where register='" + id + "' and registerDate='" + date + "';");
+	      this.query = ("update tbRegister set prescription ='" + prescription + "' where register='" + id + "' and registerDate='" + date + " 00:00:00.000000';");
 	      System.out.println(this.query);
 	      if (stmt.executeUpdate(this.query) != 0) {
 	          return true;
@@ -297,11 +318,11 @@ public class PatientModel implements Model{
 	}
 	
 	public ResultSet readMHistory(String id) {
-		//System.out.println("到数据库了");
+		//System.out.println("鍒版暟鎹簱浜�");
 		try
 	    {
 	      Statement stmt = this.con.createStatement();
-	      this.query = ("select * from tbRegister where u_ID='" + id + "';");
+	      this.query = ("select * from tbRegister where u_ID ='" + id + "';");
 	      System.out.println(this.query);
 	      ResultSet rs = stmt.executeQuery(this.query);
 	      if (rs != null) {
@@ -316,24 +337,26 @@ public class PatientModel implements Model{
 	}
 	
 	public String[] readPrescription(String id, int i) {
-		System.out.println("到数据库了");
+		System.out.println("readPrescription");
 		try
 	    {
 	      Statement stmt = this.con.createStatement();
-	      this.query = ("select * from tbRegister where u_ID='" + id + "';");
+	      this.query = ("select * from tbRegister where u_ID ='" + id + "';");
 	      System.out.println(this.query); 
 	      ResultSet rs = stmt.executeQuery(this.query);
 	      Vector<String> v = new Vector();
 	      if(i == 1) {
 		      while(rs.next()) {
 		    	  String temp = new String(rs.getString("registerDate"));
-		    	  temp = temp.substring(0,temp.length()-11); 
+		    	  //System.out.println(temp); 
+		    	  temp = temp.substring(0,temp.length()-9); 
 		    	  //System.out.println(temp);
 			      v.add(temp);
 		      };
 	      }
 	      if(i == 2) {
 		      while(rs.next()) {
+		    	  /*
 		    	  String temp =  new String(" ");
 		    	  if(rs.getString("prescription").equals("")) {
 		    		  temp =  new String(" ");
@@ -341,6 +364,8 @@ public class PatientModel implements Model{
 		    	  else{
 		    		  temp = new String(rs.getString("prescription"));
 		    	  }
+		    	  */
+		    	  String temp = new String(rs.getString("prescription"));
 			      v.add(temp);
 		      };
 	      }

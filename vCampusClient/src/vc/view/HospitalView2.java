@@ -45,7 +45,7 @@ public class HospitalView2 extends JFrame {
 		newIHospitalimpl = new IHospitalimpl(StudentId, this.sockethelper);
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 351, 205);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -138,12 +138,23 @@ public class HospitalView2 extends JFrame {
 		button.setBounds(55, 125, 93, 23);
 		contentPane.add(button);
 		
+		JButton button_1 = new JButton("\u5199\u75C5\u60C5");
+		button_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Prescribe prescription = null;
+				prescription = new Prescribe(StudentId);
+				prescription.setVisible(true);
+				dispose();
+			}
+		});
+		button_1.setBounds(190, 124, 93, 23);
+		contentPane.add(button_1);
+		
 		
 	}
 	
 	public void connected() throws ClassNotFoundException {
-		System.out.println("PInfo.getId()_-1£º"
-				+ admin.getId());
 		admin = newIHospitalimpl.getPatientInfo(admin);
 
 	}

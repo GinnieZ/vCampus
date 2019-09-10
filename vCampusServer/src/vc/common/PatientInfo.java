@@ -77,10 +77,10 @@ public class PatientInfo
 	
 	public String[] getUnpaidMedcine_2() {
 		int i = 0;
-		//System.out.println("getUnpaidMedcine_2");
+		System.out.println("getUnpaidMedcine_2");
 		String[] s = new String[unpaidMedcine.size()];
 		for(i=0;i<unpaidMedcine.size();i++) {
-			//System.out.println(unpaidMedcine.get(i));
+			System.out.println(unpaidMedcine.get(i));
 			s[i] = unpaidMedcine.get(i);
 		}
 		return s;
