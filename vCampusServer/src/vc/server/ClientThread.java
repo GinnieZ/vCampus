@@ -1248,18 +1248,39 @@ public class ClientThread extends Thread implements MsgType {
 	      case 401: {
 	        try
 	        {
+	          //debug
+	          System.out.println("查阅图书："+bookInfo.getName());
 	          BookInfo[] result = lb.queryBook(bookInfo);
 	          if (result != null)
 	          {
 	            this.oos.writeInt(4011); //查询成功
 	            this.oos.writeObject(result);
+	            //查询单本图书有图片:按名字查询或按id查询
+	            if((!bookInfo.getName().equals(""))|(bookInfo.getId()!=0))
+	            {
+		            File file = new File("images\\"+result[0].getName()+".jpg");
+		            if(!file.exists())
+		            	file = new File("images\\无.jpg");
+		            FileInputStream fis = new FileInputStream(file);
+		            byte[] sendBytes = new byte[1024];
+		            int length = 0;
+	                while((length=fis.read(sendBytes)) != -1){
+	                	this.dos.write(sendBytes, 0, length);
+	                	this.dos.flush();
+	                }
 	          }
+	          }
+	          
 	          else
 	          {
 	            this.oos.writeInt(4012); //查询失败
 	          }
 	          this.oos.flush();
 	        }
+	        catch (FileNotFoundException e)
+	        {
+				System.out.println("找不到文件");
+			}
 	        catch (IOException e)
 	        {
 	          e.printStackTrace();
