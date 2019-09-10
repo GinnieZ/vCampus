@@ -3,6 +3,7 @@ package vc.sendImpl;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.ResultSet;
 
 import vc.common.CourseInfo;
 import vc.common.MedcineInfo;
@@ -197,6 +198,62 @@ public class IHospitalimpl {
 			this.os.writeObject(medcine);
 			this.os.flush();
 			if (this.is.readInt() == 8061) {
+				return true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public String[] readMDay(String id) {
+		try {
+			this.os.writeInt(820);
+			this.os.flush();
+			this.os.writeObject(id);
+			this.os.flush();
+			String[] day = (String[]) this.is.readObject();
+			//String[] mhis = (String[]) this.is.readObject();
+			if (this.is.readInt() == 8201) {
+				return day;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String[] readMHistory(String id) {
+		try {
+			this.os.writeInt(821);
+			this.os.flush();
+			this.os.writeObject(id);
+			this.os.flush();
+			//String[] day = (String[]) this.is.readObject();
+			//String[] mhis = (String[]) this.is.readObject();
+			String[] rs = (String[]) this.is.readObject();
+			if (this.is.readInt() == 8211) {
+				return rs;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public boolean addMHistory(String id,String MHistory) {
+		try {
+			this.os.writeInt(822);
+			this.os.flush();
+			this.os.writeObject(id);
+			this.os.flush();
+			this.os.writeObject(MHistory);
+			this.os.flush();
+			if (this.is.readInt() == 8221) {
 				return true;
 			}
 		} catch (IOException e) {

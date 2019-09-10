@@ -36,14 +36,14 @@ public class PayView extends JFrame {
 		sockethelper.getConnection();
 		newIHospitalimpl = new IHospitalimpl(StudentId, this.sockethelper);
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 708, 525);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JLabel jl3=new JLabel(new ImageIcon("src/付款二维码.jpg"));
+		JLabel jl3=new JLabel(new ImageIcon("src\\vc\\images\\付款二维码.jpg"));
 		contentPane.add(jl3);
         jl3.setBounds(0, 150, 700, 500);
 	}
