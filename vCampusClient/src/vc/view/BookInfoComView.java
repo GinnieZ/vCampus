@@ -21,9 +21,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.SystemColor;
 
 import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -63,70 +65,71 @@ public class BookInfoComView extends JFrame {
 		sockethelper.getConnection();
 		
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 635, 540);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setBounds(100, 100, 840, 675);
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblTitle = new JLabel("Í¼Êé²éÑ¯½á¹û");
+		JLabel lblTitle = new JLabel("å›¾ä¹¦æŸ¥è¯¢ç»“æœ");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitle.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 28));
+		lblTitle.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 28));
 		lblTitle.setBounds(180, 13, 194, 47);
 		contentPane.add(lblTitle);
 		
-		////////////±í¸ñµÄ´´½¨Óë³õÊ¼»¯////////////       
+		////////////è¡¨æ ¼çš„åˆ›å»ºä¸åˆå§‹åŒ–////////////       
         tblBookInfo = new JTable(8,2);
-        tblBookInfo.setEnabled(false);//ÉèÖÃ±í¸ñ²»¿É±à¼­
+        tblBookInfo.setEnabled(false);//è®¾ç½®è¡¨æ ¼ä¸å¯ç¼–è¾‘
       
-        tblBookInfo.setFont(new Font("Î¢ÈíÑÅºÚ Light", Font.PLAIN, 16));
+        tblBookInfo.setFont(new Font("å¾®è½¯é›…é»‘ Light", Font.PLAIN, 18));
 		tblBookInfo.setColumnSelectionAllowed(true);
 		tblBookInfo.setForeground(Color.DARK_GRAY);
-		tblBookInfo.setSelectionBackground(Color.LIGHT_GRAY);     // Ñ¡ÖĞºó×ÖÌå±³¾°
-		tblBookInfo.setGridColor(Color.GRAY);                     // Íø¸ñÑÕÉ«
+		tblBookInfo.setSelectionBackground(Color.LIGHT_GRAY);     // é€‰ä¸­åå­—ä½“èƒŒæ™¯
+		tblBookInfo.setGridColor(Color.GRAY);                     // ç½‘æ ¼é¢œè‰²
 		tblBookInfo.setBounds(105, 250, 250, 140);
 		tblBookInfo.setRowHeight(30);
 
-        // µÚÒ»ÁĞÁĞ¿íÉèÖÃÎª80£¬µÚ¶şÁĞÁĞ¿íÉèÖÃÎª320
+        // ç¬¬ä¸€åˆ—åˆ—å®½è®¾ç½®ä¸º80ï¼Œç¬¬äºŒåˆ—åˆ—å®½è®¾ç½®ä¸º320
 		tblBookInfo.getColumnModel().getColumn(0).setPreferredWidth(80);
 		tblBookInfo.getColumnModel().getColumn(1).setPreferredWidth(400);
-		tblBookInfo.setValueAt("ÊéÃû", 0, 0);
-		tblBookInfo.setValueAt("ÊéºÅ", 1, 0);
+		tblBookInfo.setValueAt("ä¹¦å", 0, 0);
+		tblBookInfo.setValueAt("ä¹¦å·", 1, 0);
 		tblBookInfo.setValueAt("ISBN", 2, 0);
-		tblBookInfo.setValueAt("×÷Õß", 3, 0);
-		tblBookInfo.setValueAt("³ö°æÉç", 4, 0);
-		tblBookInfo.setValueAt("³ö°æÈÕÆÚ", 5, 0);
-		tblBookInfo.setValueAt("¹İ²Ø", 6, 0);
-		tblBookInfo.setValueAt("ÊÇ·ñ½èÔÄ", 7, 0);
+		tblBookInfo.setValueAt("ä½œè€…", 3, 0);
+		tblBookInfo.setValueAt("å‡ºç‰ˆç¤¾", 4, 0);
+		tblBookInfo.setValueAt("å‡ºç‰ˆæ—¥æœŸ", 5, 0);
+		tblBookInfo.setValueAt("é¦†è—", 6, 0);
+		tblBookInfo.setValueAt("æ˜¯å¦å€Ÿé˜…", 7, 0);
 
-		//Òş²Ø±íÍ·£ºÎª±íÍ·ÉèÖÃÒ»¸ö CellRenderer, Õâ¸ö CellRenderer µÄÔ¤Ñ¡¸ß¶ÈÎª 0
+		//éšè—è¡¨å¤´ï¼šä¸ºè¡¨å¤´è®¾ç½®ä¸€ä¸ª CellRenderer, è¿™ä¸ª CellRenderer çš„é¢„é€‰é«˜åº¦ä¸º 0
 		tblBookInfo.getTableHeader().setVisible(false);
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
 		renderer.setPreferredSize(new Dimension(0, 0));
 		tblBookInfo.getTableHeader().setDefaultRenderer(renderer);
 		tblBookInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);  
 		
-		//½ÓÊÜĞÅÏ¢½øĞĞÏÔÊ¾
+		//æ¥å—ä¿¡æ¯è¿›è¡Œæ˜¾ç¤º
 		booklist = new ILibraryComImpl(userId, this.sockethelper).EnquiryAllBook(bookName);
 		System.out.println("booklist.size:"+booklist.size());
 		if(booklist.size()==0)
 		{
-			JOptionPane.showMessageDialog(null, "Ã»ÓĞÕÒµ½Õâ±¾ÊéÓ´~");
+			JOptionPane.showMessageDialog(null, "æ²¡æœ‰æ‰¾åˆ°è¿™æœ¬ä¹¦å“Ÿ~");
 			this.dispose();
 			return;
 		}
 		System.out.println(booklist.size());
-		lblCurrentP = new JLabel("Ä¿Ç° 0/");
+		lblCurrentP = new JLabel("ç›®å‰ 0/");
 		lblCurrentP.setForeground(Color.DARK_GRAY);
-		lblCurrentP.setFont(new Font("Î¢ÈíÑÅºÚ Light", Font.PLAIN, 15));
-		lblCurrentP.setBounds(417, 390, 84, 30);
+		lblCurrentP.setFont(new Font("å¾®è½¯é›…é»‘ Light", Font.PLAIN, 15));
+		lblCurrentP.setBounds(412, 502, 84, 30);
 		contentPane.add(lblCurrentP);
 		
-		String str = "Ä¿Ç°  "+1+"/"+(booklist.size());	
+		String str = "ç›®å‰  "+1+"/"+(booklist.size());	
 		lblCurrentP.setText(str);
 		
-		//ÓÃµÚÒ»Ìõ²éÑ¯½á¹û½øĞĞ³õÊ¼»¯
+		//ç”¨ç¬¬ä¸€æ¡æŸ¥è¯¢ç»“æœè¿›è¡Œåˆå§‹åŒ–
 		tblBookInfo.setValueAt(booklist.get(0).getName(), 0, 1);
 		tblBookInfo.setValueAt(booklist.get(0).getId(), 1, 1);
 		tblBookInfo.setValueAt(booklist.get(0).getIsbn(), 2, 1);
@@ -135,138 +138,148 @@ public class BookInfoComView extends JFrame {
 		tblBookInfo.setValueAt(booklist.get(0).getPubDate(), 5, 1);
 		tblBookInfo.setValueAt(booklist.get(0).getPos(), 6, 1);
 		if(booklist.get(0).isBorrowed())
-			tblBookInfo.setValueAt("ÒÑ½è", 7, 1);
+			tblBookInfo.setValueAt("å·²å€Ÿ", 7, 1);
 		else
-			tblBookInfo.setValueAt("¿É½è", 7, 1);		
+			tblBookInfo.setValueAt("å¯å€Ÿ", 7, 1);		
 										
 		JScrollPane scrollBookInfo = new JScrollPane(tblBookInfo);
-		scrollBookInfo.setBounds(113, 73, 388, 275);				
+		scrollBookInfo.setBounds(102, 106, 413, 335);				
 		
-		scrollBookInfo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //ÉèÖÃË®Æ½¹ö¶¯Ìõ×ÜÊÇ¿É¼û
+		scrollBookInfo.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);  //è®¾ç½®æ°´å¹³æ»šåŠ¨æ¡æ€»æ˜¯å¯è§
 	    getContentPane().add(scrollBookInfo);
 		contentPane.add(scrollBookInfo);
 
-		////////////°´¼üµÄ³õÊ¼»¯////////////
-		JButton btnBorrow = new JButton("½èÔÄ");
-		btnBorrow.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnBorrow.setBounds(394, 450, 84, 30);
+		////////////æŒ‰é”®çš„åˆå§‹åŒ–////////////
+		JButton btnBorrow = new JButton("å€Ÿé˜…");
+		btnBorrow.setBackground(new Color(255, 182, 193));
+		btnBorrow.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnBorrow.setBounds(377, 569, 84, 30);
 		contentPane.add(btnBorrow);
 		
-		JButton btnReturn = new JButton("·µ»Ø");
-		btnReturn.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnReturn.setBackground(SystemColor.inactiveCaption);
-		btnReturn.setBounds(501, 450, 84, 30);
+		JButton btnReturn = new JButton("è¿”å›");
+		btnReturn.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnReturn.setBackground(new Color(95, 158, 160));
+		btnReturn.setBounds(499, 569, 84, 30);
 		contentPane.add(btnReturn);
 		
-		JButton btnFirstP = new JButton("Ê×Ò³");
-		btnFirstP.setBackground(UIManager.getColor("InternalFrame.inactiveTitleGradient"));
-		btnFirstP.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnFirstP.setBounds(123, 361, 84, 27);
+		JButton btnFirstP = new JButton("é¦–é¡µ");
+		btnFirstP.setBackground(new Color(176, 196, 222));
+		btnFirstP.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnFirstP.setBounds(118, 473, 84, 27);
 		contentPane.add(btnFirstP);
 		
-		JButton btnPreviousP = new JButton("ÉÏÒ»Ò³");
-		btnPreviousP.setBackground(UIManager.getColor("InternalFrame.inactiveTitleGradient"));
-		btnPreviousP.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnPreviousP.setBounds(221, 361, 84, 27);
+		JButton btnPreviousP = new JButton("ä¸Šä¸€é¡µ");
+		btnPreviousP.setBackground(new Color(176, 196, 222));
+		btnPreviousP.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnPreviousP.setBounds(216, 473, 84, 27);
 		contentPane.add(btnPreviousP);
 		
-		JButton btnNextP = new JButton("ÏÂÒ»Ò³");
-		btnNextP.setBackground(UIManager.getColor("InternalFrame.inactiveTitleGradient"));
-		btnNextP.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnNextP.setBounds(319, 361, 84, 27);
+		JButton btnNextP = new JButton("ä¸‹ä¸€é¡µ");
+		btnNextP.setBackground(new Color(176, 196, 222));
+		btnNextP.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnNextP.setBounds(314, 473, 84, 27);
 		contentPane.add(btnNextP);
 		
-		JButton btnLastP = new JButton("Î²Ò³");
-		btnLastP.setBackground(UIManager.getColor("InternalFrame.inactiveTitleGradient"));
-		btnLastP.setFont(new Font("Î¢ÈíÑÅºÚ", Font.PLAIN, 16));
-		btnLastP.setBounds(417, 361, 84, 27);
+		JButton btnLastP = new JButton("å°¾é¡µ");
+		btnLastP.setBackground(new Color(176, 196, 222));
+		btnLastP.setFont(new Font("å¾®è½¯é›…é»‘", Font.PLAIN, 16));
+		btnLastP.setBounds(412, 473, 84, 27);
 		contentPane.add(btnLastP);
 		
-		////////////°´¼ü¼àÌı////////////	
+		////////////å›¾ç‰‡æ˜¾ç¤º////////////		
+		JLabel lblBookImg = new JLabel("New label");
+		lblBookImg.setBounds(538, 116, 245, 325);
+
+		ImageIcon bookImg = new ImageIcon("src\\vc\\images\\"+bookName+".jpg");	
+		bookImg.setImage(bookImg.getImage().getScaledInstance(245, 325, Image.SCALE_DEFAULT ));		
+		lblBookImg.setIcon(bookImg);
+		contentPane.add(lblBookImg);
+		////////////æŒ‰é”®ç›‘å¬////////////	
 		
-		//½èÔÄ
+		//å€Ÿé˜…
 		btnBorrow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			//ÅĞ¶ÏÊÇ·ñ¿É½è£¬½«ÓÃ»§idÓëÊéºÅ´«Óë·şÎñÆ÷¶Ë£¬·şÎñÆ÷¶Ë½øĞĞ½èÔÄ£¬ĞŞ¸ÄÏà¹ØĞÅÏ¢£¬¿Í»§¶ËË¢ĞÂ½á¹û
+			//åˆ¤æ–­æ˜¯å¦å¯å€Ÿï¼Œå°†ç”¨æˆ·idä¸ä¹¦å·ä¼ ä¸æœåŠ¡å™¨ç«¯ï¼ŒæœåŠ¡å™¨ç«¯è¿›è¡Œå€Ÿé˜…ï¼Œä¿®æ”¹ç›¸å…³ä¿¡æ¯ï¼Œå®¢æˆ·ç«¯åˆ·æ–°ç»“æœ
 				bookId = (int)tblBookInfo.getValueAt( 1, 1);
 				Date borrowDate=new Date();
 		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		        String borrowDateStr=dateFormat.format(borrowDate);
 				long borrowDateLong =  Long.parseLong(borrowDateStr);
-				//¼ÆËã¹é»¹ÈÕÆÚ
+				//è®¡ç®—å½’è¿˜æ—¥æœŸ
 				Calendar rightNow = Calendar.getInstance();		
-				rightNow.add(Calendar.DAY_OF_YEAR,30);//ÈÕÆÚ¼Ó30Ìì
+				rightNow.add(Calendar.DAY_OF_YEAR,30);//æ—¥æœŸåŠ 30å¤©
 				Date returnDate=rightNow.getTime();
 				String returnDateStr=dateFormat.format(returnDate);
 				long returnDateLong =  Long.parseLong(returnDateStr);
-				System.out.println("¼ÆËãµÄ¹é»¹ÈÕÆÚ£º"+returnDateStr);
+				System.out.println("è®¡ç®—çš„å½’è¿˜æ—¥æœŸï¼š"+returnDateStr);
 				boolean isBorrowed = new ILibraryComImpl(userId, sockethelper).BorrowBook(0,bookName,borrowDateLong,returnDateLong);
 				if(!isBorrowed)
-					JOptionPane.showMessageDialog(null, "Õâ±¾ÊéÒÑ¾­±»½èÁËÅ¶~");
+					JOptionPane.showMessageDialog(null, "è¿™æœ¬ä¹¦å·²ç»è¢«å€Ÿäº†å“¦~");
 				else
 				{
-					JOptionPane.showMessageDialog(null, "½èÔÄ³É¹¦~");
-					//ĞŞ¸Ä½èÔÄĞÅÏ¢
-					tblBookInfo.setValueAt("ÒÑ½è",7,1);
+					//å–æ¶ˆå€Ÿé˜…æˆåŠŸå¼¹çª—
+					//JOptionPane.showMessageDialog(null, "å€Ÿé˜…æˆåŠŸ~");
+					//ä¿®æ”¹å€Ÿé˜…ä¿¡æ¯
+					tblBookInfo.setValueAt("å·²å€Ÿ",7,1);
 				}
 				
 			}
 		});
 		
-		//·µ»Ø
+		//è¿”å›
 		btnReturn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();
 			}
 		});
 		
-		//Ê×Ò³
+		//é¦–é¡µ
 		btnFirstP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page = 0;
-				lblCurrentP.setText("Ä¿Ç°  "+(page+1)+"/"+(booklist.size()));
+				lblCurrentP.setText("ç›®å‰  "+(page+1)+"/"+(booklist.size()));
 				refresh();
 			}
 		});
 		
-		//ÉÏÒ»Ò³
+		//ä¸Šä¸€é¡µ
 		btnPreviousP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(page==0)
-					JOptionPane.showMessageDialog(null, "ÒÑ¾­ÊÇµÚÒ»Ò³ÁËÓ´~");
+					JOptionPane.showMessageDialog(null, "å·²ç»æ˜¯ç¬¬ä¸€é¡µäº†å“Ÿ~");
 				else
 				{
 					page--;
-					lblCurrentP.setText("Ä¿Ç°  "+(page+1)+"/"+(booklist.size()));
+					lblCurrentP.setText("ç›®å‰  "+(page+1)+"/"+(booklist.size()));
 					refresh();
 				}
 			}
 		});
 
-		//ÏÂÒ»Ò³
+		//ä¸‹ä¸€é¡µ
 		btnNextP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(page==booklist.size()-1)
-					JOptionPane.showMessageDialog(null, "ÒÑ¾­ÊÇ×îºóÒ»Ò³ÁËÓ´~");
+					JOptionPane.showMessageDialog(null, "å·²ç»æ˜¯æœ€åä¸€é¡µäº†å“Ÿ~");
 				else
 				{
 					page++;
-					lblCurrentP.setText("Ä¿Ç°  "+(page+1)+"/"+(booklist.size()));
+					lblCurrentP.setText("ç›®å‰  "+(page+1)+"/"+(booklist.size()));
 					refresh();
 				}
 			}
 		});
 
-		//Î²Ò³		
+		//å°¾é¡µ		
 		btnLastP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				page = booklist.size()-1;
-				lblCurrentP.setText("Ä¿Ç°  "+(page+1)+"/"+(booklist.size()));
+				lblCurrentP.setText("ç›®å‰  "+(page+1)+"/"+(booklist.size()));
 				refresh();
 			}
 		});
 
-		//¹Ø±ÕÊÂ¼şµÄ¼àÌı
+		//å…³é—­äº‹ä»¶çš„ç›‘å¬
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 			super.windowClosing(e);
@@ -274,7 +287,7 @@ public class BookInfoComView extends JFrame {
 			 }
 			}); 
 	}
-	//Ë¢ĞÂ±í¸ñ
+	//åˆ·æ–°è¡¨æ ¼
 	public void refresh()
 	{
 		tblBookInfo.setValueAt(booklist.get(page).getName(), 0, 1);
@@ -285,11 +298,11 @@ public class BookInfoComView extends JFrame {
 		tblBookInfo.setValueAt(booklist.get(page).getPubDate(), 5, 1);
 		tblBookInfo.setValueAt(booklist.get(page).getPos(), 6, 1);
 		if(booklist.get(page).isBorrowed())
-			tblBookInfo.setValueAt("ÒÑ½è", 7, 1);
+			tblBookInfo.setValueAt("å·²å€Ÿ", 7, 1);
 		else
-			tblBookInfo.setValueAt("¿É½è", 7, 1);
+			tblBookInfo.setValueAt("å¯å€Ÿ", 7, 1);
 	}
-	//¹Ø±Õ´°¿Ú
+	//å…³é—­çª—å£
 	public void close()
 	{
 		myLibraryComView.refresh();
